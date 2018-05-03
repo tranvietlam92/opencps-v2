@@ -1058,7 +1058,7 @@ public class DossierActionsImpl implements DossierActions {
 
 			DossierActionUserImpl dossierActionUser = new DossierActionUserImpl();
 
-			_log.debug("subUsers***" + subUsers);
+			_log.info("subUsers***" + subUsers);
 
 			if (Validator.isNotNull(subUsers)) {
 				JSONArray subUsersArray = JSONFactoryUtil.createJSONArray(subUsers);
@@ -1068,20 +1068,18 @@ public class DossierActionsImpl implements DossierActions {
 				dossierActionUser.initDossierActionUser(dossierAction.getDossierActionId(), userId, groupId,
 						assignUserId);
 			}
-			
 			// ADD DUE DATE
 			dossier = DossierLocalServiceUtil.updateStatus(groupId, dossierId, referenceUid, DossierStatusConstants.NEW,
 					jsStatus.getString(DossierStatusConstants.NEW), StringPool.BLANK, StringPool.BLANK, context);
-			
 			int duration = getDuration(serviceProcess);
-			
-			if (duration != 0) {
-				Date estimeteDate = DossierOverDueUtils.calculateEndDate(dossier.getSubmitDate(), duration);
-				dossier.setDueDate(estimeteDate);
-				DossierLocalServiceUtil.syncDossier(dossier);
-			} else {
-				_log.info("DONT HAVE ANY CONFIG FOR CACULATING DUE DATE");
-			}
+//			if (duration != 0) {
+//				_log.info("11");
+//				Date estimeteDate = DossierOverDueUtils.calculateEndDate(dossier.getSubmitDate(), duration);
+//				dossier.setDueDate(estimeteDate);
+//				DossierLocalServiceUtil.syncDossier(dossier);
+//			} else {
+//				_log.info("DONT HAVE ANY CONFIG FOR CACULATING DUE DATE");
+//			}
 
 		} else {
 
@@ -1336,21 +1334,18 @@ public class DossierActionsImpl implements DossierActions {
 			
 			int duration = getDuration(serviceProcess);
 			
-			if (duration != 0 && Validator.isNotNull(dossier.getDueDate())) {
-				
-				Date estimeteDate = DossierOverDueUtils.calculateEndDate(dossier.getSubmitDate(), duration);
-				dossier.setDueDate(estimeteDate);
-				DossierLocalServiceUtil.syncDossier(dossier);
-			} else {
-				_log.info("DONT HAVE ANY CONFIG FOR CACULATING DUE DATE");
-			}
+//			if (duration != 0 && Validator.isNotNull(dossier.getDueDate())) {
+//				
+//				Date estimeteDate = DossierOverDueUtils.calculateEndDate(dossier.getSubmitDate(), duration);
+//				dossier.setDueDate(estimeteDate);
+//				DossierLocalServiceUtil.syncDossier(dossier);
+//			} else {
+//				_log.info("DONT HAVE ANY CONFIG FOR CACULATING DUE DATE");
+//			}
 
 		}
-
 		ProcessStep postStep = ProcessStepLocalServiceUtil.fetchBySC_GID(postStepCode, groupId, serviceProcessId);
-
 		String dossierBriefNote = DossierContentGenerator.getBriefNote(groupId, dossierId, postStep.getBriefNote());
-
 		if (Validator.isNotNull(dossierBriefNote)) {
 			DossierLocalServiceUtil.updateDossierBriefNote(dossierId, dossierBriefNote);
 		}
@@ -1361,7 +1356,6 @@ public class DossierActionsImpl implements DossierActions {
 		// 2. get all plugins of this step
 		// 3. get plugin has autoRun
 		// 4. Create update formData
-
 		_log.info("IN_CURRENT_STEP:" + curStep.getStepCode() + curStep.getStepName());
 
 		List<ProcessPlugin> plugins = ProcessPluginLocalServiceUtil.getProcessPlugins(serviceProcessId,
@@ -1390,6 +1384,11 @@ public class DossierActionsImpl implements DossierActions {
 
 		_log.info("END DO ACTION ==========");
 		return dossierAction;
+//} catch (Exception e) {
+//	_log.error(e);
+//	return null;
+//}
+		
 	}
 
 	private void _doAutoRun(long groupId, String fileTemplateNo, long dossierId, String dossierTemplateNo,
