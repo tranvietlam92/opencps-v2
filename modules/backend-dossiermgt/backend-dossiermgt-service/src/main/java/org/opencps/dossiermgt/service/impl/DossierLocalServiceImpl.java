@@ -603,11 +603,14 @@ public class DossierLocalServiceImpl extends DossierLocalServiceBaseImpl {
 			durationDays = Math.round(durationCount / 8);
 		}
 
-		if (durationDays == 0) {
-			durationDays = DUE_DATE_DEFAULT;
-		}
+//		if (durationDays == 0) {
+//			durationDays = DUE_DATE_DEFAULT;
+//		}
 
-		Date dueDate = DossierOverDueUtils.calculateEndDate(now, durationDays);
+		Date dueDate = null;
+		if (durationDays > 0) {
+			dueDate = DossierOverDueUtils.calculateEndDate(now, durationDays);
+		}
 
 		// set dueDate
 		dossier.setDueDate(dueDate);
