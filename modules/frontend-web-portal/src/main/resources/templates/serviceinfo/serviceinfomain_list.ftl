@@ -10,8 +10,8 @@
       <span class="show-per-page">Hiển thị
         <span class="select-wrapper">
          <select class="ML5" id="slPageSize">
-           <option value="5" selected="">5</option>
-           <option value="10">10</option>
+           <option value="5">5</option>
+           <option value="10" selected="">10</option>
            <option value="15">15</option>
            <option value="25">25</option>
            <option value="50">50</option>
@@ -132,7 +132,7 @@
             if(serviceLevel3.length > 0)
             {
               #
-                 <div class="dropdown">
+                 <#-- <div class="dropdown">
                     <button class="btn btn-active btn-small dropdown-toggle" type="button" data-toggle="dropdown">Nộp hồ sơ
                       <span class="caret"></span>
                     </button>
@@ -154,7 +154,7 @@
                       }
                       #
                     </ul>
-                  </div>
+                  </div> -->
               #
             } else if(serviceLevel2.length > 0){
                 #
@@ -215,6 +215,7 @@
   #}# -->
 </div>
 </li>
+
 </script>
 </div>
 </div>
@@ -240,10 +241,19 @@
           pageSize: options.data.pageSize,
           administration: options.data.administration,
           domain: options.data.domain,
-          level: options.data.level
+          level: options.data.level,
+          active: true
         },
         success: function(result) {
-          options.success(result);
+          if (result.data) {
+            options.success(result);
+          } else {
+            options.success({
+              data: [],
+              total: 0
+            });
+          }
+          
           if(parseInt($("#slPageSize").val()) > parseInt(serviceInfoDataSource.total())){
             $("#numPerPage").text(serviceInfoDataSource.total());
             $("#totalItem").text(serviceInfoDataSource.total());
@@ -282,7 +292,7 @@
   data: "data",
   model : { id: "serviceInfoId" }
 },
-pageSize: 5,
+pageSize: 10,
 serverPaging: false,
 serverSorting: false,
 serverFiltering: false
@@ -383,7 +393,6 @@ serverFiltering: false
         }
       },
       change : function(){
-        console.log("change");
       }
     });
 
@@ -443,8 +452,6 @@ serverFiltering: false
 
     function onSearchServiceInfo(){
       var level = ($("#levelSearch").val()=="") ? 0 : $("#levelSearch").val();
-      console.log($("#levelSearch").val());
-      console.log(level);
       serviceInfoDataSource.read({
         "administration": $("#administrationCodeSearch").val(),
         "domain": $("#domainCodeSearch").val(),
@@ -454,7 +461,6 @@ serverFiltering: false
     }
 
     $("#slPageSize").change(function(){
-      console.log($(this).val());
       if(parseInt($("#slPageSize").val()) > parseInt(serviceInfoDataSource.total())){
         $("#numPerPage").text(serviceInfoDataSource.total());
         $("#totalItem").text(serviceInfoDataSource.total());

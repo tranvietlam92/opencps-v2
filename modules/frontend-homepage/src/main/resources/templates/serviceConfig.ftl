@@ -3,7 +3,7 @@
 </#if>
 <div class="dvc34" style="width:100%">
 	<div class="panel-vanhoa">
-		<div class="title">Văn hóa</div>
+		<!-- <div class="title">Văn hóa</div> -->
 		<div id="scList"></div>
 		<script type="text/x-kendo-template" id="scTemplate">
 			<div class="lv">
@@ -28,6 +28,9 @@
 						type: 'GET',
 						headers: {
 							'groupId': '55217',
+						},
+						data:{
+							active: true
 						},
 						success: function(result){
 							options.success(result)

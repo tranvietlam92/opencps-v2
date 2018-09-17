@@ -162,7 +162,7 @@ public class ApplicantLocalServiceImpl extends ApplicantLocalServiceBaseImpl {
 			
 
 			boolean autoPassword = false;
-			boolean autoScreenName = true;
+			boolean autoScreenName = false;
 			boolean sendEmail = false;
 
 			long[] groupIds = new long [] {groupId};
@@ -171,6 +171,9 @@ public class ApplicantLocalServiceImpl extends ApplicantLocalServiceBaseImpl {
 			long[] userGroupIds = null;
 
 			String screenName = null;
+			
+			String[] For_split_email = contactEmail.split("@");
+			screenName = For_split_email[0];
 
 			if (Validator.isNull(password)) {
 				password = PwdGenerator.getPassword(ServiceProps.PASSWORD_LENGHT);
@@ -341,14 +344,14 @@ public class ApplicantLocalServiceImpl extends ApplicantLocalServiceBaseImpl {
 
 		if (Validator.isNotNull(user))
 			throw new DuplicateContactEmailException("DuplicateContactEmailException");
-
-/*		if (Validator.isNotNull(contactTelNo)) {
+		
+		if (Validator.isNotNull(contactTelNo)) {
 
 			applicant = fetchByTelNo(contactTelNo);
 
 			if (Validator.isNotNull(applicant))
 				throw new DuplicateContactTelNoException("DuplicateContactTelNoException");
-		}*/
+		}
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -401,6 +404,20 @@ public class ApplicantLocalServiceImpl extends ApplicantLocalServiceBaseImpl {
 		// reset activationCode
 		applicant.setActivationCode(StringPool.BLANK);
 		// applicant.setTmpPass(StringPool.BLANK);
+
+		applicantPersistence.update(applicant);
+
+		return applicant;
+	}
+	
+	@Indexable(type = IndexableType.REINDEX)
+	public Applicant lockApplicant(long applicantId, ServiceContext context) throws PortalException {
+
+		Applicant applicant = applicantLocalService.fetchApplicant(applicantId);
+
+		User user = userPersistence.fetchByPrimaryKey(applicant.getMappingUserId());
+
+		userLocalService.updateStatus(user.getUserId(), WorkflowConstants.STATUS_DENIED, context);
 
 		applicantPersistence.update(applicant);
 

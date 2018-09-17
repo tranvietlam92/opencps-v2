@@ -24,20 +24,20 @@ import org.opencps.dossiermgt.action.impl.DossierActionsImpl;
 import org.opencps.dossiermgt.action.impl.DossierPermission;
 import org.opencps.dossiermgt.action.impl.ServiceProcessActionsImpl;
 import org.opencps.dossiermgt.model.Dossier;
-import org.opencps.dossiermgt.model.DossierAction;
 import org.opencps.dossiermgt.model.DossierTemplate;
 import org.opencps.dossiermgt.model.ProcessAction;
 import org.opencps.dossiermgt.model.ProcessOption;
 import org.opencps.dossiermgt.model.ServiceConfig;
 import org.opencps.dossiermgt.model.ServiceInfo;
 import org.opencps.dossiermgt.model.ServiceProcess;
-import org.opencps.dossiermgt.service.DossierActionLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierTemplateLocalServiceUtil;
 import org.opencps.dossiermgt.service.ProcessActionLocalServiceUtil;
 import org.opencps.dossiermgt.service.ProcessOptionLocalServiceUtil;
 import org.opencps.dossiermgt.service.ServiceConfigLocalServiceUtil;
 import org.opencps.dossiermgt.service.ServiceInfoLocalServiceUtil;
+import org.opencps.usermgt.model.WorkingUnit;
+import org.opencps.usermgt.service.WorkingUnitLocalServiceUtil;
 
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -49,15 +49,17 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 
 public class OneGateControllerImpl implements OneGateController {
 
 	@Override
 	public Response getServiceconfigs(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
 			User user, ServiceContext serviceContext) {
-		
+
 		long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
-		
+
 		BackendAuth auth = new BackendAuthImpl();
 
 		// TODO need implement user in GovAgency
@@ -91,31 +93,30 @@ public class OneGateControllerImpl implements OneGateController {
 				List<ProcessOption> processOptions = ProcessOptionLocalServiceUtil
 						.getByServiceProcessId(serviceConfig.getServiceConfigId());
 
-
 				for (ProcessOption processOption : processOptions) {
 					JSONArray options = JSONFactoryUtil.createJSONArray();
 					JSONObject elmOption = JSONFactoryUtil.createJSONObject();
-					
+
 					elmOption.put("processOptionId", processOption.getProcessOptionId());
 					elmOption.put("optionName", processOption.getOptionName());
 					elmOption.put("instructionNote", processOption.getInstructionNote());
-					
-					DossierTemplate dossierTemplate = DossierTemplateLocalServiceUtil.getDossierTemplate(processOption.getDossierTemplateId());
+
+					DossierTemplate dossierTemplate = DossierTemplateLocalServiceUtil
+							.getDossierTemplate(processOption.getDossierTemplateId());
 					elmOption.put("templateNo", dossierTemplate.getTemplateNo());
 					elmOption.put("templateName", dossierTemplate.getTemplateName());
-					
+
 					options.put(elmOption);
-					
+
 					elmData.put("options", options);
 
 				}
-				
-				
+
 				data.put(elmData);
 			}
-			
+
 			results.put("data", data);
-			
+
 			_log.info(results.toJSONString());
 
 			return Response.status(200).entity(results.toJSONString()).build();
@@ -132,6 +133,9 @@ public class OneGateControllerImpl implements OneGateController {
 
 		long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
 		BackendAuth auth = new BackendAuthImpl();
+
+		backend.auth.api.BackendAuth auth2 = new backend.auth.api.BackendAuthImpl();
+
 		DossierPermission dossierPermission = new DossierPermission();
 
 		DossierActions actions = new DossierActionsImpl();
@@ -143,6 +147,10 @@ public class OneGateControllerImpl implements OneGateController {
 		try {
 
 			if (!auth.isAuth(serviceContext)) {
+				throw new UnauthenticationException();
+			}
+
+			if (!auth2.checkToken(request, header)) {
 				throw new UnauthenticationException();
 			}
 
@@ -163,10 +171,11 @@ public class OneGateControllerImpl implements OneGateController {
 					input.getPostalTelNo(), serviceContext);
 
 			DossierDetailModel result = null;
-			if (dossier != null ) {
+
+			if (dossier != null) {
 				result = OneGateUtils.mappingForGetDetail(dossier);
 			}
-			
+
 			return Response.status(200).entity(result).build();
 
 		} catch (Exception e) {
@@ -210,11 +219,10 @@ public class OneGateControllerImpl implements OneGateController {
 	public Response updateDossierOngate(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
 			User user, ServiceContext serviceContext, DossierOnegateInputModel input, long dossierId) {
 
-		//long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
+		// long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
 		BackendAuth auth = new BackendAuthImpl();
-		//DossierPermission dossierPermission = new DossierPermission();
+		// DossierPermission dossierPermission = new DossierPermission();
 		long dActionId = GetterUtil.getLong(input.getDossierActionId());
-
 
 		_log.info("__INPUT_ONEGATE_UPDATE");
 		_log.info(JSONFactoryUtil.looseSerialize(input));
@@ -240,10 +248,10 @@ public class OneGateControllerImpl implements OneGateController {
 					input.getPaymentFee(), input.getPaymentFeeNote(), serviceContext);
 
 			DossierDetailModel result = null;
-			if (dossier != null ) {
+			if (dossier != null) {
 				result = OneGateUtils.mappingForGetDetail(dossier);
 			}
-			
+
 			return Response.status(200).entity(result).build();
 
 		} catch (Exception e) {
@@ -255,9 +263,9 @@ public class OneGateControllerImpl implements OneGateController {
 	@Override
 	public Response getDossierOngate(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
 			User user, ServiceContext serviceContext, long dossierId) {
-		//long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
+		// long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
 		BackendAuth auth = new BackendAuthImpl();
-		//DossierPermission dossierPermission = new DossierPermission();
+		// DossierPermission dossierPermission = new DossierPermission();
 
 		try {
 
@@ -266,14 +274,15 @@ public class OneGateControllerImpl implements OneGateController {
 			}
 
 			Dossier dossier = DossierLocalServiceUtil.fetchDossier(dossierId);
-			
+
 			DossierDetailModel result = null;
-			if (dossier != null ) {
+			if (dossier != null) {
 				result = OneGateUtils.mappingForGetDetail(dossier);
 			}
-			
+
 			return Response.status(200).entity(result).build();
-//			return Response.status(200).entity(JSONFactoryUtil.looseSerialize(dossier)).build();
+			// return
+			// Response.status(200).entity(JSONFactoryUtil.looseSerialize(dossier)).build();
 
 		} catch (Exception e) {
 			_log.info(e);
@@ -313,22 +322,26 @@ public class OneGateControllerImpl implements OneGateController {
 				results.put("paymentFeeRequest", 0);
 				results.put("paymentFeeTotal", 0);
 			}
-//			if (dActionId > 0) {
-//				DossierAction dAction = DossierActionLocalServiceUtil.fetchDossierAction(dActionId);
-//				ProcessAction process = ProcessActionLocalServiceUtil.getByServiceProcess(dAction.getServiceProcessId(), dAction.getActionCode());
-//				results.put("paymentFeeTotal", process.getPaymentFee());
-//			} else 
-//			if (serviceProcess != null) {
-//				ProcessAction process = ProcessActionLocalServiceUtil
-//						.getByServiceProcess(serviceProcess.getServiceProcessId(), String.valueOf(10000));
-//				if (process != null) {
-//					results.put("paymentFeeTotal", process.getPaymentFee());
-//				} else {
-//					results.put("paymentFeeTotal", 0);
-//				}
-//			} else {
-//				results.put("paymentFeeTotal", 0);
-//			}
+			// if (dActionId > 0) {
+			// DossierAction dAction =
+			// DossierActionLocalServiceUtil.fetchDossierAction(dActionId);
+			// ProcessAction process =
+			// ProcessActionLocalServiceUtil.getByServiceProcess(dAction.getServiceProcessId(),
+			// dAction.getActionCode());
+			// results.put("paymentFeeTotal", process.getPaymentFee());
+			// } else
+			// if (serviceProcess != null) {
+			// ProcessAction process = ProcessActionLocalServiceUtil
+			// .getByServiceProcess(serviceProcess.getServiceProcessId(),
+			// String.valueOf(10000));
+			// if (process != null) {
+			// results.put("paymentFeeTotal", process.getPaymentFee());
+			// } else {
+			// results.put("paymentFeeTotal", 0);
+			// }
+			// } else {
+			// results.put("paymentFeeTotal", 0);
+			// }
 
 			return Response.status(200).entity(JSONFactoryUtil.looseSerialize(results)).build();
 
@@ -336,6 +349,53 @@ public class OneGateControllerImpl implements OneGateController {
 			_log.info(e);
 			return _processException(e);
 		}
+	}
+
+	@Override
+	public Response getToken(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
+			User user) {
+
+		try {
+
+			String token = (String) request.getSession().getAttribute(CSRF_TOKEN_FOR_SESSION_NAME);
+
+			_log.info("CHECK::TOKEN:::::" + token);
+
+			if (Validator.isNull(token)) {
+				token = PortalUUIDUtil.generate();
+
+				_log.info("GENERATE_TOKEN:::::" + token);
+
+				request.getSession().setAttribute(CSRF_TOKEN_FOR_SESSION_NAME, token);
+			}
+			return Response.status(200).entity(token).build();
+		} catch (Exception e) {
+			_log.info(e);
+			return _processException(e);
+		}
+
+	}
+
+	@Override
+	public Response getGovInfo(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
+			User user) {
+		
+		_log.info("**GET GOV_INFO**");
+
+		long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
+		String govAgencyCode = header.getHeaderString("govAgencyCode");
+		_log.info("**groupId:**" + groupId);
+		_log.info("**govAgencyCode:**" + govAgencyCode);
+
+		try {
+			WorkingUnit workingUnit = WorkingUnitLocalServiceUtil.getByGovAgencyCode(groupId, govAgencyCode);
+			
+			return Response.status(200).entity(JSONFactoryUtil.looseSerialize(workingUnit)).build();
+		} catch (Exception e) {
+			_log.info(e);
+			return _processException(e);
+		}
+
 	}
 
 }
