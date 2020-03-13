@@ -25,6 +25,10 @@ public class FileUploadUtils {
 		FileEntry fileEntry = null;
 
 		if (inputStream != null && fileSize > 0 && Validator.isNotNull(fileName)) {
+			
+			if (Validator.isNull(serviceContext)) {
+				serviceContext = new ServiceContext();
+			}
 
 			serviceContext.setAddGroupPermissions(true);
 			serviceContext.setAddGuestPermissions(true);

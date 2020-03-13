@@ -21,6 +21,10 @@ import org.opencps.auth.api.BackendAuth;
 import org.opencps.auth.api.BackendAuthImpl;
 import org.opencps.auth.api.exception.UnauthenticationException;
 import org.opencps.auth.api.exception.UnauthorizationException;
+import org.opencps.datamgt.model.DictCollection;
+import org.opencps.datamgt.model.DictItem;
+import org.opencps.datamgt.service.DictCollectionLocalServiceUtil;
+import org.opencps.datamgt.service.DictItemLocalServiceUtil;
 import org.opencps.dossiermgt.action.DeliverableActions;
 import org.opencps.dossiermgt.action.DossierActions;
 import org.opencps.dossiermgt.action.impl.DeliverableActionsImpl;
@@ -29,22 +33,33 @@ import org.opencps.dossiermgt.constants.DossierActionTerm;
 import org.opencps.dossiermgt.constants.DossierTerm;
 import org.opencps.dossiermgt.model.Deliverable;
 import org.opencps.dossiermgt.model.Dossier;
+import org.opencps.dossiermgt.model.DossierAction;
+import org.opencps.dossiermgt.model.DossierActionUser;
 import org.opencps.dossiermgt.model.DossierFile;
+import org.opencps.dossiermgt.model.ProcessStep;
+import org.opencps.dossiermgt.model.ProcessStepRole;
+import org.opencps.dossiermgt.service.DossierActionLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierActionUserLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierFileLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
+import org.opencps.dossiermgt.service.ProcessStepLocalServiceUtil;
+import org.opencps.dossiermgt.service.ProcessStepRoleLocalServiceUtil;
 
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.SortFactoryUtil;
+import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -52,6 +67,70 @@ import com.liferay.portal.kernel.util.Validator;
 public class DossierActionManagementImpl implements DossierActionManagement {
 
 	Log _log = LogFactoryUtil.getLog(DossierActionManagementImpl.class);
+
+	private boolean isSpecial(Dossier dossier) {
+		boolean isSpecical = false;
+
+		try {
+
+			DictCollection dictCollection = DictCollectionLocalServiceUtil.fetchByF_dictCollectionCode("DOSSIER_STATUS",
+					dossier.getGroupId());
+
+			String dossierStatus = dossier.getDossierStatus();
+
+			DictItem dictItem = DictItemLocalServiceUtil.fetchByF_dictItemCode(dossierStatus,
+					dictCollection.getDictCollectionId(), dossier.getGroupId());
+
+			if (Validator.isNotNull(dictItem)) {
+				String metaData = dictItem.getMetaData();
+
+				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(metaData);
+
+				isSpecical = GetterUtil.getBoolean(jsonObject.get("specialStatus"));
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return isSpecical;
+	}
+
+	private boolean hasPermisson(Dossier dossier, long userId) {
+
+		boolean hasPermission = false;
+
+		try {
+			long dossierActionId = dossier.getDossierActionId();
+
+			List<Role> userRoles = RoleLocalServiceUtil.getUserRoles(userId);
+
+			DossierAction dossierAction = DossierActionLocalServiceUtil.getDossierAction(dossierActionId);
+
+			ProcessStep processStep = ProcessStepLocalServiceUtil.fetchBySC_GID(dossierAction.getStepCode(),
+					dossier.getGroupId(), dossierAction.getServiceProcessId());
+
+			List<ProcessStepRole> processStepRoles = ProcessStepRoleLocalServiceUtil
+					.findByP_S_ID(processStep.getProcessStepId());
+
+			for (ProcessStepRole processStepRole : processStepRoles) {
+				for (Role role : userRoles) {
+					if (processStepRole.getRoleId() == role.getRoleId()) {
+
+						hasPermission = true;
+
+						break;
+					}
+
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return hasPermission;
+	}
 
 	@Override
 	public Response getListActions(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
@@ -64,6 +143,50 @@ public class DossierActionManagementImpl implements DossierActionManagement {
 		try {
 			long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
 			long dossierId = GetterUtil.getLong(id);
+
+			long userId = user.getUserId();
+
+			Dossier dossier = DossierLocalServiceUtil.getDossier(dossierId);
+
+			long dossierActionId = dossier.getDossierActionId();
+
+			List<DossierActionUser> dossierActionUsers = DossierActionUserLocalServiceUtil.getListUser(dossierActionId);
+
+			_log.info("userId___" + userId);
+			_log.info("dossierActionId___" + dossierActionId);
+			_log.info("dossierActionUsers___size()" + dossierActionUsers.size());
+
+			boolean hasPermission = false;
+			
+			_log.info("isSpecial(dossier)__" + isSpecial(dossier));
+
+			if (isSpecial(dossier)) {
+				for (DossierActionUser actionUser : dossierActionUsers) {
+					if (actionUser.getUserId() == userId && actionUser.getModerator() == 1) {
+						hasPermission = true;
+						
+						break;
+					}
+				}
+			} else {
+				boolean isInUserAction = false;
+				
+				for (DossierActionUser actionUser : dossierActionUsers) {
+					if (actionUser.getUserId() == userId && actionUser.getModerator() == 1) {
+						isInUserAction = true;
+						
+						break;
+					}
+				}
+				
+				hasPermission = isInUserAction || hasPermisson(dossier, userId);
+			}
+
+			if (!hasPermission) {
+				result.setTotal(0);
+
+				return Response.status(200).entity(result).build();
+			}
 
 			String referenceUid = StringPool.BLANK;
 
@@ -261,21 +384,22 @@ public class DossierActionManagementImpl implements DossierActionManagement {
 			if (!auth.isAuth(serviceContext)) {
 				throw new UnauthenticationException();
 			}
-			
+
 			List<DossierFile> dossierFileList = DossierFileLocalServiceUtil.getDossierFilesByDossierId(id);
-//			_log.info("dossier File: "+ dossierFileList.get);
+			// _log.info("dossier File: "+ dossierFileList.get);
 			StringBuilder sb = new StringBuilder();
 			String deliverableCode = StringPool.BLANK;
 			if (dossierFileList != null && dossierFileList.size() > 0) {
 				int length = dossierFileList.size();
-//				_log.info("Size dossier File: "+ length);
+				// _log.info("Size dossier File: "+ length);
 				int ii = 0;
 				for (int i = 0; i < length; i++) {
 					DossierFile dossierFile = dossierFileList.get(i);
 					deliverableCode = dossierFile.getDeliverableCode();
-//					_log.info("deliverableCode: "+ deliverableCode);
+					// _log.info("deliverableCode: "+ deliverableCode);
 					if (Validator.isNotNull(deliverableCode)) {
-//						_log.info("deliverableCode Check: "+ deliverableCode);
+						// _log.info("deliverableCode Check: "+
+						// deliverableCode);
 						ii += 1;
 						if (ii == 1) {
 							sb.append(StringPool.APOSTROPHE);
@@ -289,23 +413,23 @@ public class DossierActionManagementImpl implements DossierActionManagement {
 						}
 					}
 				}
-//				_log.info("Str Dossier Id: "+ sb.toString());
+				// _log.info("Str Dossier Id: "+ sb.toString());
 			}
 
 			DeliverableActions action = new DeliverableActionsImpl();
 			//
 			//
 			List<Deliverable> deliverableList = action.getDeliverableByState(sb.toString(), state);
-//			_log.info("Str list deliverable: "+ deliverableList);
+			// _log.info("Str list deliverable: "+ deliverableList);
 			JSONArray results = JSONFactoryUtil.createJSONArray();
 			if (deliverableList != null && deliverableList.size() > 0) {
-//				int lengthDeliver = deliverableList.size();
-//				_log.info("Size list deliverable: "+ deliverableList.size());
+				// int lengthDeliver = deliverableList.size();
+				// _log.info("Size list deliverable: "+ deliverableList.size());
 				String formData = StringPool.BLANK;
 				for (Deliverable deliverable : deliverableList) {
 					JSONObject formDetail = JSONFactoryUtil.createJSONObject();
 					formData = deliverable.getFormData();
-//					_log.info("formData: "+ formData);
+					// _log.info("formData: "+ formData);
 					try {
 						JSONObject jsonData = JSONFactoryUtil.createJSONObject(formData);
 						formDetail.put("so_chung_chi", jsonData.get("so_chung_chi"));
@@ -325,23 +449,24 @@ public class DossierActionManagementImpl implements DossierActionManagement {
 						String strReport = String.valueOf(jsonData.get("bien_ban"));
 						try {
 							JSONObject jsonReportData = JSONFactoryUtil.createJSONObject(strReport);
-							formDetail.put("bien_ban@hinh_thuc_cap_giay_text", jsonReportData.get("hinh_thuc_cap_giay_text"));
+							formDetail.put("bien_ban@hinh_thuc_cap_giay_text",
+									jsonReportData.get("hinh_thuc_cap_giay_text"));
 							formDetail.put("bien_ban@so_bien_ban", jsonReportData.get("so_bien_ban"));
 							formDetail.put("bien_ban@dang_kiem_vien_chinh", jsonReportData.get("dang_kiem_vien_chinh"));
 							results.put(formDetail);
 						} catch (Exception e) {
 							_log.info("================");
-							//-log.error(e);
+							// -log.error(e);
 						}
 					} catch (Exception e) {
 						_log.info("================");
-						//-log.error(e);
+						// -log.error(e);
 					}
-					
+
 				}
 			}
 
-//			_log.info("Result: "+ results);
+			// _log.info("Result: "+ results);
 			return Response.status(200).entity(JSONFactoryUtil.looseSerialize(results)).build();
 		} catch (Exception e) {
 			return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(e).build();

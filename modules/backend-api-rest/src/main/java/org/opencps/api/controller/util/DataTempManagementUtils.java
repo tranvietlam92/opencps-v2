@@ -233,7 +233,9 @@ public class DataTempManagementUtils {
 						.fetchDictItemTemp(Long.valueOf(document.get(DictItemTempTerm.PARENT_ITEM_ID)));
 
 				ParentItemModel parentItemModel = new ParentItemModel();
-
+				
+				ett.setParentItemId(GetterUtil.getLong(document.get(DictItemTempTerm.PARENT_ITEM_ID)));
+				
 				if (Validator.isNotNull(parentItem)) {
 
 					parentItemModel.setItemCode(parentItem.getItemCode());

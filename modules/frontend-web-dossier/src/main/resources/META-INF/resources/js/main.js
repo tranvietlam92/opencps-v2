@@ -47,7 +47,8 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 			advancedFilterNhanHieu : {},
 			advancedFilterDossierStatus : {},
 			stateOnlyFollow : false,
-			stateButtonregistration : true
+			stateButtonregistration : true,
+			follow : true
 		},
 		onScroll: 'onScroll',
 		schema: {
@@ -334,7 +335,6 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 												item.hasSubmit = true;
 											}
 
-
 										}catch(e){
 
 										}
@@ -602,6 +602,14 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 
 
                         			promise.then(function(success){
+                        				/*var formDataRequireds = $(".formDataRequired");
+
+                        				for (var i = 0; i < formDataRequireds.length; i++) {
+                        					if($(formDataRequireds[i]).val() === 0){
+                        						return;
+                        					}
+                        				}
+*/
                         				vm.postNextActions(item);
                         			}, function(error){
 
@@ -1208,8 +1216,8 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 
 									var indexTree = -1;
 									var index = 0;
-									console.log("listgroupHoSoFilterItems=======FISRT",vm.listgroupHoSoFilterItems);
-									console.log("serializable=======",serializable.data);
+									//console.log("listgroupHoSoFilterItems=======FISRT",vm.listgroupHoSoFilterItems);
+									//console.log("serializable=======",serializable.data);
 									for (var key in serializable.data) {
 										for(var i in vm.listgroupHoSoFilterItems){
 											if ( serializable.data[key].level === 0) {
@@ -1234,7 +1242,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 									}
 
 								}
-								console.log("listgroupHoSoFilterItems=======LAST",vm.listgroupHoSoFilterItems);
+								//console.log("listgroupHoSoFilterItems=======LAST",vm.listgroupHoSoFilterItems);
 
 							},
 							error : function(result){
@@ -1363,6 +1371,8 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 
 								vm.statusParamFilter = '';
 								vm.substatusParamFilter = '';
+
+								vm.follow = false;
 
 								vm._inidanhSachHoSoTable(false);
 
@@ -2213,7 +2223,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 
 								axios.get(urlGetFile, config_blob).then(function (response) {
 									var url = window.URL.createObjectURL(response.data);
-									console.log("url===========>",url);
+									//console.log("url===========>",url);
 									window.open(url , '_blank');
 								})
 								.catch(function (error) {
@@ -2377,7 +2387,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 								keyword: vm.keywordsSearch,
 								owner: vm.applicantNameFilter.applicantIdNo,
 								service: vm.serviceInfoFilter.serviceCode,
-								follow: true,
+								follow: vm.follow,
 								dossierNo: vm.dossierNoFilter,
 								start: vm.danhSachHoSoTablepage * 15 - 15,
 								end: vm.danhSachHoSoTablepage * 15,
@@ -2387,7 +2397,6 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 								order: 'false'
 							};
 
-							
 							
 							if ( vm.keywordFilter != null ) {
 								paramsBuilder['keyword'] = vm.keywordFilter;
@@ -2407,6 +2416,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 							axios.get(url, config_dossiers).then(function (response) {
 								var serializable = response.data;
 								
+								vm.follow = true;
 
 								if (append) {
 									vm.danhSachHoSoTableItems.push.apply(vm.danhSachHoSoTableItems, serializable.data);
@@ -2466,7 +2476,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 										$( this ).html($( this ).attr('aria-label').substring(0, $( this ).attr('aria-label').indexOf(":")).replace(/\./g,"<br/>"));
 									}
 								});
-								console.log(vm.danhSachHoSoTableItems);
+								//console.log(vm.danhSachHoSoTableItems);
 							})
 							.catch(function (error) {
 								console.log(error);
@@ -2613,7 +2623,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 									animation: 'fade'
 								})
 								.then((dialog) => {
-									console.log("dialog============",dialog);
+									//console.log("dialog============",dialog);
 
 									window.open(url, "_blank", "ccc");
 
@@ -2682,7 +2692,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 							
 							axios.get(url, config_blob).then(function (response) {
 								var url = window.URL.createObjectURL(response.data);
-								console.log(url);
+								//console.log(url);
 								window.open(url);
 							})
 							.catch(function (error) {
@@ -3010,7 +3020,7 @@ var funLoadVue = function(stateWindowParam, dossierIdParam, dossierPartNo, email
 							
 							axios.get(url, config_blob).then(function (response) {
 								var url = window.URL.createObjectURL(response.data);
-								console.log(url);
+								//console.log(url);
 								window.open(url);
 							})
 							.catch(function (error) {

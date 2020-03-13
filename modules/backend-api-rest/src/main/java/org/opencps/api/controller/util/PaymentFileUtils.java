@@ -244,10 +244,20 @@ public class PaymentFileUtils {
 		if (documents == null) {
 			return null;
 		}
+		
+
 
 		List<PaymentFileSearchTemplateModel> results = new ArrayList<PaymentFileSearchTemplateModel>();
 		//
 		for (Document doc : documents) {
+			
+			Dossier dossier = DossierLocalServiceUtil.fetchDossier(GetterUtil.getLong(doc.get(PaymentFileTerm.DOSSIER_ID)));
+			
+			if (Validator.isNull(dossier)) {
+				//_log.info("DOSSIER_IS_NULL**&&");
+				continue;
+			}
+
 			PaymentFileSearchTemplateModel model = new PaymentFileSearchTemplateModel();
 
 			// model.setCreateDate(APIDateTimeUtils.convertDateToString(doc.getDate(PaymentFileTerm.CREATE_DATE)));
@@ -350,7 +360,6 @@ public class PaymentFileUtils {
 				model.setInvoiceFileSize(0L);
 			}
 
-			Dossier dossier = DossierLocalServiceUtil.fetchDossier(GetterUtil.getLong(doc.get(PaymentFileTerm.DOSSIER_ID)));
 			
 			model.setBriefNote(dossier.getBriefNote());
 

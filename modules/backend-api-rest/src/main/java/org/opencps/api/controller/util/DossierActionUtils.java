@@ -137,6 +137,8 @@ public class DossierActionUtils {
 						dossierActionNextActioncreateFile.setCounter(createFile.getInt("counter"));
 						dossierActionNextActioncreateFile.setReturned(createFile.getBoolean("returned"));
 						dossierActionNextActioncreateFile.setDossierFileId(createFile.getLong("dossierFileId"));
+						dossierActionNextActioncreateFile.setRequired(createFile.getBoolean("required"));
+						
 						outputCreeateFiles.add(dossierActionNextActioncreateFile);
 
 					}

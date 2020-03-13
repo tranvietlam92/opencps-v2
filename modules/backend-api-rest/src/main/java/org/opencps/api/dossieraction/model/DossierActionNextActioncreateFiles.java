@@ -54,7 +54,8 @@ import javax.xml.bind.annotation.XmlType;
     "formData",
     "counter",
     "returned",
-    "dossierFileId"
+    "dossierFileId",
+    "required"
 })
 public class DossierActionNextActioncreateFiles {
 
@@ -71,6 +72,15 @@ public class DossierActionNextActioncreateFiles {
     protected Integer counter;
     protected Boolean returned;
     protected Long dossierFileId;
+    public Boolean getRequired() {
+		return required;
+	}
+
+	public void setRequired(Boolean required) {
+		this.required = required;
+	}
+
+	protected Boolean required;
     
     /**
      * Gets the value of the dossierFileId property.

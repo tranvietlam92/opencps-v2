@@ -63,7 +63,7 @@
 		</div>
 	</div>
 
-	<div class="guide-section PB0">
+	<div class="guide-section PB0" style="clear: both;">
 		<div class="head-part slide-toggle">
 			<div class="background-triangle-small">
 				<i class="fa fa-star"></i>
@@ -408,7 +408,7 @@
 	function onCloseDialog(){
 
 	}*/
-
+	console.log("VLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 	var fnCheckIsChangeForm = function(){
 		if (arrIsChangeForm) {
 			for (var i = 0; i < arrIsChangeForm.length; i++) {

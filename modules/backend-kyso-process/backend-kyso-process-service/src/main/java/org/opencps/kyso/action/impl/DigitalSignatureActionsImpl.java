@@ -166,10 +166,10 @@ public class DigitalSignatureActionsImpl implements DigitalSignatureActions{
 //								urx + 94, ury - 70), 1);
 //				inHash = signer.computeHash(new Rectangle(llx + 22, lly - 145, urx + 94, ury - 70), 1);
 				if (TYPE_KYSO.contains(typeSignature) && STEPCODE_KYSO.contains(postStepCode)) {
-					inHash = signer.computeHash(new Rectangle(llx + 10, lly - 15, urx + 90, ury), 1);
+					inHash = signer.computeHash(new Rectangle(llx + 10, lly - 15, urx + 90, ury),textLocation.getPageSize());
 					_log.info("inHash_Kyso: "+inHash);
 				} else if (TYPE_DONGDAU.contains(typeSignature) && STEPCODE_DONGDAU.contains(postStepCode)) {
-					inHash = signer.computeHash(new Rectangle(llx + 10, lly - 115, urx + 90, ury-95), 1);
+					inHash = signer.computeHash(new Rectangle(llx + 10, lly - 115, urx + 90, ury-95), textLocation.getPageSize());
 					_log.info("inHash_Dongdau: "+inHash);
 				}
 //				inHash = signer.computeHash(new Rectangle(llx + 10, lly - 15, urx + 90, ury), 1);
@@ -192,11 +192,23 @@ public class DigitalSignatureActionsImpl implements DigitalSignatureActions{
 //							fileNames.put(urlFile);
 
 				fieldName = signer.getSignatureName();
+				_log.info("fieldName");
+				
+				
 				fullPathSigned = signer.getSignedFile();
+				_log.info("fullPathSigned");
+
 				hashComputers.put(Base64.encode(inHash));
+				_log.info("hashComputers");
+
 				signFieldNames.put(fieldName);
+				_log.info("signFieldNames");
+
 				fileNames.put(dlFileEntry.getFileName());
+				
+				_log.info("fileNames");
 				messages.put("success");
+
 				fullPathOfSignedFiles.put(fullPathSigned);
 				
 				_log.info("hashComputers: "+hashComputers);

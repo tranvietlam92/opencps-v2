@@ -511,8 +511,7 @@ public class EmployeeManagementImpl implements EmployeeManagement {
 	@Override
 	public Response getEmployeeJobpos(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
 			User user, ServiceContext serviceContext, long id, DataSearchModel query) {
-		
-		
+
 		EmployeeInterface actions = new EmployeeActions();
 		EmployeeJobposResults result = new EmployeeJobposResults();
 		try {
@@ -555,7 +554,7 @@ public class EmployeeManagementImpl implements EmployeeManagement {
 
 			return Response.status(404).entity(error).build();
 		}
-		
+
 	}
 
 	@Override
@@ -933,54 +932,55 @@ public class EmployeeManagementImpl implements EmployeeManagement {
 	@Override
 	public Response getEmployeesByRole(HttpServletRequest request, HttpHeaders header, Company company, Locale locale,
 			User user, ServiceContext serviceContext, long roleId, DataSearchModel query) {
-			EmployeeInterface actions = new EmployeeActions();
-			EmployeeResults result = new EmployeeResults();
-			try {
+		EmployeeInterface actions = new EmployeeActions();
+		EmployeeResults result = new EmployeeResults();
 
-				long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
+		try {
 
-				List<User> users = UserLocalServiceUtil.getRoleUsers(roleId);
-				StringBuilder strUserIdList = new StringBuilder();
-				if (users != null && users.size() > 0) {
-					int length = users.size();
-					for (int i = 0; i < length; i++) {
-						User userDetail = users.get(i);
-						long userId = userDetail.getUserId();
-						if (Validator.isNotNull(userId) && userId > 0) {
-							if (i == length - 1) {
-								strUserIdList.append(userId);
-							} else {
-								strUserIdList.append(userId);
-								strUserIdList.append(StringPool.COMMA);
-							}
+			long groupId = GetterUtil.getLong(header.getHeaderString("groupId"));
+
+			List<User> users = UserLocalServiceUtil.getRoleUsers(roleId);
+			StringBuilder strUserIdList = new StringBuilder();
+			if (users != null && users.size() > 0) {
+				int length = users.size();
+				for (int i = 0; i < length; i++) {
+					User userDetail = users.get(i);
+					long userId = userDetail.getUserId();
+					if (Validator.isNotNull(userId) && userId > 0) {
+						if (i == length - 1) {
+							strUserIdList.append(userId);
+						} else {
+							strUserIdList.append(userId);
+							strUserIdList.append(StringPool.COMMA);
 						}
 					}
 				}
+			}
 
-				if (query.getEnd() == 0) {
+			if (query.getEnd() == 0) {
 
-					query.setStart(-1);
+				query.setStart(-1);
 
-					query.setEnd(-1);
+				query.setEnd(-1);
 
-				}
+			}
 
-				LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
 
-				params.put("groupId", String.valueOf(groupId));
-				params.put("keywords", query.getKeywords());
-				params.put("userIdList", strUserIdList.toString());
+			params.put("groupId", String.valueOf(groupId));
+			params.put("keywords", query.getKeywords());
+			params.put("userIdList", strUserIdList.toString());
 
-				Sort[] sorts = new Sort[] { SortFactoryUtil.create(query.getSort() + "_sortable", Sort.STRING_TYPE,
-						Boolean.getBoolean(query.getOrder())) };
+			Sort[] sorts = new Sort[] { SortFactoryUtil.create(query.getSort() + "_sortable", Sort.STRING_TYPE,
+					Boolean.getBoolean(query.getOrder())) };
 
-				JSONObject jsonData = actions.getEmployees(user.getUserId(), company.getCompanyId(), groupId, params, sorts,
-						query.getStart(), query.getEnd(), serviceContext);
+			JSONObject jsonData = actions.getEmployees(user.getUserId(), company.getCompanyId(), groupId, params, sorts,
+					query.getStart(), query.getEnd(), serviceContext);
 
-				result.setTotal(jsonData.getLong("total"));
-				result.getEmployeeModel().addAll(EmployeeUtils.mapperEmployeeList((List<Document>) jsonData.get("data")));
+			result.setTotal(jsonData.getLong("total"));
+			result.getEmployeeModel().addAll(EmployeeUtils.mapperEmployeeList((List<Document>) jsonData.get("data")));
 
-				return Response.status(200).entity(result).build();
+			return Response.status(200).entity(result).build();
 
 		} catch (Exception e) {
 			_log.error(e);
@@ -1114,9 +1114,8 @@ public class EmployeeManagementImpl implements EmployeeManagement {
 	public Response getEmployeesHaveJobPos(HttpServletRequest request, HttpHeaders header, Company company,
 			Locale locale, User user, ServiceContext serviceContext, long jobposid) {
 		List<Employee> employees = getEmployee(0, jobposid);
-		
-		_log.info("::::JOBPOS ID::" + jobposid);
 
+		_log.info("::::JOBPOS ID::" + jobposid);
 
 		EmployeeResults result = new EmployeeResults();
 
@@ -1174,11 +1173,11 @@ public class EmployeeManagementImpl implements EmployeeManagement {
 		} catch (Exception e) {
 			_log.info(e);
 		}
-		
+
 		Set<Employee> hs = new HashSet<>();
-		
+
 		hs.addAll(employees);
-		
+
 		employees.clear();
 		employees.addAll(hs);
 

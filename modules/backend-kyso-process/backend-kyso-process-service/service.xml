@@ -10,7 +10,7 @@
 
 		<!-- PK fields -->
 
-		<column name="jasperId" primary="true" type="long" />
+		<column name="jasperId" primary="true" type="long"  />
 		
 	</entity>
 	

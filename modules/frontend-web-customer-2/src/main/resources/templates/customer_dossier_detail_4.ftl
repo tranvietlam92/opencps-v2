@@ -5,11 +5,11 @@
 	<div class="box">
 
 		<input type="hidden" name="dossierStatus" id="dossierStatus">
-		
+
 		<input type="hidden" name="dossierTemplateNo" id="dossierTemplateNo">
 		<input type="hidden" name="dossierId" id="dossierId" value="${(dossierId)!}">
 		<div class="row-header align-middle">
-			<div class="background-triangle-big">Tên thủ tục</div> 
+			<div class="background-triangle-big">Tên thủ tục</div>
 			<span class="text-bold" data-bind="text:serviceName"></span>
 			<div class="pull-right group-icons">
 				<a href="javascript:;" onclick="fnBack();">
@@ -18,7 +18,7 @@
 				</a>
 
 				<#if sendReissue?has_content >
-				
+
 				<a class="" id="btn-sendReissue-dossier-header" data-bind="value : lockState"><i class="fa fa-paper-plane"></i> Yêu cầu cấp lại</a>
 
 				<#elseif resCancelling?has_content >
@@ -29,12 +29,12 @@
 
 				<a class="" id="btn-sendadd-dossier-header" data-bind="value : lockState"><i class="fa fa-paper-plane"></i> Gửi bổ sung</a>
 
-				<#elseif dossier.submitting?has_content &&  dossier.submitting != true && dossier.dossierStatus?has_content && dossier.dossierStatus == "waiting">
+				<#elseif dossier.submitting?has_content &&  dossier.submitting != true && dossier.dossierStatus?has_content && dossier.dossierStatus == "waiting" || dossier.dossierStatus == "waiting_3">
 				
 				<a class="" id="btn-submit-dossier-header" data-bind="value : lockState"><i class="fa fa-paper-plane"></i> Nộp hồ sơ</a>
 
 				<#else>
-				
+
 				</#if>
 			</div>
 		</div>
@@ -51,13 +51,13 @@
 			<div class="col-sm-4">
 				<div class="row MB5" id="">
 					<span>Số hồ sơ (Mã tiếp nhận)</span>: <span data-bind="text:dossierNo" class="text-bold"></span>
-					
+
 				</div>
 				<div class="row" id="">
 					<span>Mã hồ sơ</span>: <span data-bind="text : dossierIdCTN" class="text-bold"></span>
 				</div>
 			</div>
-			
+
 			<div class="col-sm-4">
 				<div class="row MB5" id="">
 					<span>Thời gian gửi</span>: <span data-bind="text : submitDate" class="text-bold"></span>
@@ -68,23 +68,23 @@
 					</a>
 				</div> -->
 			</div>
-			
+
 			<div class="col-sm-12">
-				<span data-bind="attr : {actionNote1 : actionNote1}" id="actionNote1"></span> 
+				<span data-bind="attr : {actionNote1 : actionNote1}" id="actionNote1"></span>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-sm-12">
-				<div class="guide-section PB0">
+				<div class="guide-section PB0" style="clear: both;">
 					<div class="head-part slide-toggle">
 						<div class="background-triangle-small">
 							<i class="fa fa-star"></i>
 
-						</div> 
-						<span class="text-uppercase hover-pointer">Hướng dẫn</span> 
+						</div>
+						<span class="text-uppercase hover-pointer">Hướng dẫn</span>
 						<i class="fa fa-angle-down pull-right hover-pointer MR15" aria-hidden="true" style="font-size: 150%;"></i>
-					</div>	
+					</div>
 
 					<div class="content-part collapse PB15" id="collapseDossierG">
 
@@ -120,7 +120,7 @@
 								</div>
 								<div class="col-sm-10">
 									<span data-bind="text:contactName"></span>
-									
+
 								</div>
 							</div>
 
@@ -130,7 +130,7 @@
 								</div>
 								<div class="col-sm-10">
 									<span data-bind="text:address"></span>
-									
+
 								</div>
 							</div>
 
@@ -140,7 +140,7 @@
 								</div>
 								<div class="col-sm-10">
 									<span data-bind="text:cityName"></span>
-									
+
 								</div>
 							</div>
 							<div class="row">
@@ -149,7 +149,7 @@
 								</div>
 								<div class="col-sm-10">
 									<span data-bind="text:districtName" ></span>
-									
+
 								</div>
 							</div>
 							<div class="row">
@@ -158,7 +158,7 @@
 								</div>
 								<div class="col-sm-10">
 									<span data-bind="text:wardName" required></span>
-									
+
 								</div>
 							</div>
 
@@ -168,7 +168,7 @@
 								</div>
 								<div class="col-sm-10">
 									<span data-bind="text:contactTelNo"></span>
-									
+
 								</div>
 							</div>
 
@@ -192,10 +192,10 @@
 				<form id="dossierFormSubmiting">
 					<div class="dossier-parts">
 						<div class="head-part align-middle MB5 slide-toggle">
-							<div class="background-triangle-small">I</div> 
+							<div class="background-triangle-small">I</div>
 							<div class="col-sm-12 PL0">
-								<span class="text-uppercase hover-pointer">Thành phần hồ sơ</span> 
-								<span class="hover-pointer pull-right"><i class="text-light-gray">Những thành phần hồ sơ có dấu 
+								<span class="text-uppercase hover-pointer">Thành phần hồ sơ</span>
+								<span class="hover-pointer pull-right"><i class="text-light-gray">Những thành phần hồ sơ có dấu
 									(<span class="red">*</span>) là thành phần bắt buộc</i>
 									<span>
 										<i class="fa fa-angle-down hover-pointer" aria-hidden="true" style="font-size: 150%;"></i>
@@ -211,7 +211,7 @@
 							<div class="row-parts-head align-middle slide-toggle">
 								<span class="text-bold MR5">#:itemIndex#.</span>
 								<span class="hover-pointer show-dossierpart-new-tab" data-partno="#:id#" #if(hasForm){# hasForm="true" #}#>
-									#:partName# 
+									#:partName#
 									#if(required){#
 									<span class="red">*</span>
 									<input type="hidden" id="validPart#:id#" name="validPart#:id#" class="validPart" value="0">
@@ -228,9 +228,9 @@
 											<i class="fa fa-archive" aria-hidden="true"></i>
 										</a>
 									#}#
-									
+
 									<#-- #if("${(dossier.dossierStatus)!}" === "new" || "${(dossier.dossierStatus)!}" === "waiting" || "${(dossier.dossierStatus)!}" === "" || "${(sendAdd)!}" === "true"){#
-									
+
 									#}# -->
 									#if(!lockState){#
 									<label class="MB0 ML10 hover-pointer lbl-dossier-file" for="file#:id#" data-partno="#:id#" title="Tải file lên" >
@@ -243,7 +243,7 @@
 									<a href="javascript:;" class="dossier-component-profile" data-placement="top" title="Số tệp tin" data-partno="#:id#" data-number="#if(hasForm){# 1 #}else {# 0 #}#">
 										<span class="number-in-circle" >#if(hasForm){# 1 #}else {# 0 #}#</span>
 									</a>
-									
+
 									#if(!lockState){#
 									<a href="javascript:;" class="text-light-gray delete-dossier-file" data-toggle="tooltip" data-placement="top" title="Xóa" data-partno="#:id#" fileTemplateNo="#:fileTemplateNo#" eForm="#:hasForm#">
 										<i class="fa fa-trash-o" aria-hidden="true"></i> Xóa
@@ -265,23 +265,22 @@
 							#
 
 							<div class="collapse" id="collapseDossierPart#:id#">
-								
+								<input type="hidden" name="" id="dossierFileId#:id#" value="#:dossierFile.dossierFileId#">
 								#if(!lockState){#
 								<div class="col-xs-12 col-sm-12 text-right">
-									<button id="btn-save-formalpaca#:id#" class="btn btn-active MB10 MT10 MR20 saveForm saveFormAlpaca" 
+									<button id="btn-save-formalpaca#:id#" class="btn btn-active MB10 MT10 MR20 saveForm saveFormAlpaca"
 									type="button" data-pk="#:id#" referenceUid="#:dossierFile.referenceUid#">Ghi lại</button>
-									<input type="hidden" name="" id="dossierFileId#:id#" value="#:dossierFile.dossierFileId#">
 								</div>
 								#}#
-								
+
 
 								<div class="col-sm-12" #if(dossierFile.referenceUid){# style="height:450px; width:100%;overflow:auto;" #}# >
 									<div class="formAlpacaDN" id="formPartNo#:id#" style="#:hiddenState#" data-pk="#:id#" data-partname="#:partName#">
-										
+
 									</div>
 								</div>
 							</div>
-							
+
 							#
 							$.ajax({
 							url : "${api.server}/dossiers/${dossierId}/files/"+dossierFile.referenceUid+"/formscript",
@@ -292,7 +291,7 @@
 							$("\\#formPartNo"+id).empty();
 							var alpaca1 = eval("(" + result + ")");
 							var formdata = fnGetFormData(${dossierId},dossierFile.referenceUid);
-							
+
 						alpaca1.data = formdata;
 
 						$("\\#formPartNo"+id).alpaca(alpaca1);
@@ -317,7 +316,7 @@
 
 	<div class="head-part align-middle MB5 slide-toggle">
 
-		<div class="background-triangle-small" id="paymentDossierNum">II</div> 
+		<div class="background-triangle-small" id="paymentDossierNum">II</div>
 		<div class="col-sm-12 PL0">
 
 			<span class="text-uppercase hover-pointer">Thanh toán</span>
@@ -331,15 +330,15 @@
 				<div class="col-sm-12" id="paymentDossierContent" data-bind="value: paymentDossier">
 
 					<div class="row MB5">
-						<div class="col-sm-2">								
-							<span class="text-bold">Tên phí thanh toán</span>	
+						<div class="col-sm-2">
+							<span class="text-bold">Tên phí thanh toán</span>
 						</div>
-						<div class="col-sm-10" data-bind="text: paymentFee"></div> 
+						<div class="col-sm-10" data-bind="text: paymentFee"></div>
 					</div>
 
 					<div class="row MB5">
-						<div class="col-sm-2">								
-							<span class="text-bold">Gía trị thanh toán</span>	
+						<div class="col-sm-2">
+							<span class="text-bold">Gía trị thanh toán</span>
 						</div>
 						<div class="col-sm-10 red">
 							<span data-bind="text:paymentAmount"></span>
@@ -348,29 +347,29 @@
 					</div>
 
 					<div class="row MB5">
-						<div class="col-sm-2">								
-							<span class="text-bold">Chuyển khoản đến</span>	
+						<div class="col-sm-2">
+							<span class="text-bold">Chuyển khoản đến</span>
 						</div>
 						<div class="col-sm-10" data-bind="text:paymentGovAgencyName "></div>
 					</div>
 
 					<div class="row MB5">
-						<div class="col-sm-2">								
+						<div class="col-sm-2">
 							<span class="text-bold">Thông tin tài khoản nhận</span>
 						</div>
 						<div class="col-sm-10" data-bind="text:paymentBankInfo"></div>
 					</div>
 
 					<div class="row MB5">
-						<div class="col-sm-2">								
-							<span class="text-bold">Trạng thái</span>	
+						<div class="col-sm-2">
+							<span class="text-bold">Trạng thái</span>
 						</div>
 						<div class="col-sm-10" data-bind="text:paymentStatus"></div>
 					</div>
 
 					<div class="row MB10">
-						<div class="col-sm-2">								
-							<span class="text-bold">Ngày thanh toán</span>	
+						<div class="col-sm-2">
+							<span class="text-bold">Ngày thanh toán</span>
 						</div>
 						<div class="col-sm-10" data-bind="text:paymentApproveDatetime"></div>
 					</div>
@@ -378,7 +377,7 @@
 					<div id="unpaid">
 						<div class="row MB10">
 							<div class="col-sm-12">
-								<button class="btn btn-sm btn-border-color MR10 text-light-blue" id="dossier-payment-online" data-bind="attr : {data-pk : referenceUidPayment}">Thanh toán trực tuyến</button> 
+								<button class="btn btn-sm btn-border-color MR10 text-light-blue" id="dossier-payment-online" data-bind="attr : {data-pk : referenceUidPayment}">Thanh toán trực tuyến</button>
 								<button class="btn btn-sm btn-border-color MR10 text-light-blue" data-bind="attr : {data-pk : referenceUidPayment}" id="dossier-payment-confirm">Thông báo đã nộp chuyển khoản</button>
 								<button class="btn btn-sm btn-border-color text-light-blue" id="dossier-payment-viewpdf" data-bind="attr : {data-pk : referenceUidPayment}">Xem phiếu thanh toán</button>
 							</div>
@@ -412,13 +411,13 @@
 
 						<div class="row">
 							<div class="col-sm-11">
-								<div class="form-group"> 
-									<label class="control-label">Ghi chú kèm theo</label> 
+								<div class="form-group">
+									<label class="control-label">Ghi chú kèm theo</label>
 									<textarea class="form-control" rows="2" id="confirmNote" name="confirmNote" data-bind="text:confirmNote">
 
-									</textarea> 
+									</textarea>
 								</div>
-							</div> 
+							</div>
 						</div>
 					</div>
 
@@ -426,13 +425,13 @@
 			</div>
 		</div>
 	</div>
-</div> 
+</div>
 
 <div class="dossier-parts">
 
 	<div class="head-part align-middle slide-toggle">
 
-		<div class="background-triangle-small" id="resultDossierNum">II</div> 
+		<div class="background-triangle-small" id="resultDossierNum">II</div>
 		<div class="col-sm-12 PL0">
 
 			<span class="text-uppercase hover-pointer">Kết quả</span>
@@ -450,7 +449,7 @@
 					<div class="row ML5">
 						<div class="col-sm-12">
 							<a href="${api.server}/dossiers/${(dossierId)!}/files/#:referenceUid#" class="download-file-result" data-pk="#:referenceUid#">
-								<i class="fa fa-download"></i> 
+								<i class="fa fa-download"></i>
 								#:displayName#
 							</a>
 						</div>
@@ -464,7 +463,7 @@
 <div class="dossier-parts">
 
 	<div class="head-part align-middle slide-toggle">
-		<div class="background-triangle-small" id="logDossierNum">III</div> 
+		<div class="background-triangle-small" id="logDossierNum">III</div>
 		<div class="col-sm-12 PL0">
 
 			<span class="text-uppercase hover-pointer">Tiến trình xử lý</span>
@@ -528,7 +527,7 @@
 					}
 				#
 
-				<span class="text-light-blue">(#:stepName#)</span> 
+				<span class="text-light-blue">(#:stepName#)</span>
 				#}#
 
 				<p>
@@ -549,10 +548,10 @@
 					<a target="_blank" href="javascript:;" onclick="openFileNewtab('${api.server}/dossiers/${dossierId}/files/#:dossier[i].dossierFileId#');" class="text-greyy text-hover-blue">
 						<i aria-hidden="true" class="fa fa-download PR5"></i>
 						#:dossier[i].fileName#
-					</a> 
+					</a>
 				</p>
 				#
-			}	 
+			}
 		}
 		#
 
@@ -562,7 +561,7 @@
 
 </div>
 </div>
-</div> 
+</div>
 
 
 <div class="row-parts-content" id="postal" data-bind="value: viaPostal">
@@ -612,7 +611,7 @@
 </div>
 
 <div id="uploadFileTemplateDialog" class="modal fade" role="dialog">
-	
+
 </div>
 
 <#-- <div id="profileDetail" class="modal fade" role="dialog">
@@ -624,26 +623,30 @@
 
 	<button class="btn btn-active" id="btn-back-dossier" type="button"><i class="fa fa-reply" aria-hidden="true"></i> Quay lại</button>
 	<#if sendReissue?has_content >
-	
+
 	<a class="btn btn-active" id="btn-sendReissue-dossier-footer" data-bind="value : correctingDate"><i class="fa fa-paper-plane"></i> Yêu cầu cấp lại</a>
 
 	<#elseif sendAdd?has_content >
-	
+
 	<a class="btn btn-active" id="btn-sendadd-dossier-footer" data-bind="value : submitting"><i class="fa fa-paper-plane"></i> Gửi bổ sung</a>
 
 	<#elseif resCancelling?has_content >
 
 	<a href="javascript:;" class="btn btn-active" id="btn-rescancelling-dossier" data-bind="value : cancellingDate"><i class="fa fa-paper-plane" ></i> Yêu cầu hủy</a>
 
-	<#elseif dossier.submitting?has_content &&  dossier.submitting != true && dossier.dossierStatus?has_content && dossier.dossierStatus == "waiting">
+	<#elseif dossier.submitting?has_content &&  dossier.submitting != true && dossier.dossierStatus?has_content && dossier.dossierStatus == "waiting" || dossier.dossierStatus == "waiting_3">
 
 	<button class="btn btn-active" id="btn-submit-dossier" data-bind="value : lockState" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Đang xử lý..."><i class="fa fa-paper-plane" ></i> Nộp hồ sơ</button>
-	
+
+	<#elseif dossier.submitting?has_content &&  dossier.submitting != true && dossier.dossierStatus?has_content && dossier.dossierStatus == "waiting_3">
+
+	<button class="btn btn-active" id="btn-submit-dossier" data-bind="value : lockState" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Đang xử lý..."><i class="fa fa-paper-plane" ></i> Xác nhận kế hoạch</button>
+
 	<#else>
-	
+
 	</#if>
 
-	
+
 </div>
 </div>
 
@@ -717,7 +720,7 @@
 					type : "GET",
 					headers : {"groupId": ${groupId}},
 					success : function(result){
-						
+
 						dataSourceDossierTemplate.read({
 							dossierTemplateNo : result.dossierTemplateNo
 						});
@@ -820,7 +823,7 @@
 							districtName:result.districtName,
 							wardName:result.wardName,
 							viaPostal : function(e){
-								
+
 								if(result.viaPostal === 0 || result.viaPostal === 1){
 									$("#postal").remove();
 								}
@@ -1054,9 +1057,9 @@
 
 					window.open(url,"_blank");
 				}
-				
+
 			}
-			
+
 		});
 
 		$(document).off("click",".dossier-file");
@@ -1074,19 +1077,18 @@
 
 			kendo.ui.progress($("#mainType2"), true);
 
-			funUploadFile($(this),partNo,dossierTemplateNo+"",fileTemplateNo,hasform);
+			funUploadFile($(this), partNo, dossierTemplateNo + "", fileTemplateNo,hasform);
 		});
 
-		$(document).off("click",".uploadfile-form-repository");
-		$(document).on("click",".uploadfile-form-repository",function(){
+		$(document).off("click", ".uploadfile-form-repository");
+		$(document).on("click", ".uploadfile-form-repository", function(){
 			var dossierId = "${(dossierId)!}";
 			var dossierTemplateNo = $("#dossierTemplateNo").val();
 			var partNo = $(this).attr("part-no");
-			$("#uploadFileTemplateDialog").load("${ajax.customer_dossier_detail_filetemplate}&${portletNamespace}dossierPartNo="+partNo+"&${portletNamespace}dossierId="+dossierId+"&${portletNamespace}dossierTemplateNo="+dossierTemplateNo,function(result){
+			$("#uploadFileTemplateDialog").load("${ajax.customer_dossier_detail_filetemplate}&${portletNamespace}dossierPartNo=" + partNo + "&${portletNamespace}dossierId=" + dossierId + "&${portletNamespace}dossierTemplateNo=" + dossierTemplateNo, function(result){
 				$(this).modal("show");
 			});
-
-			funDossierFile("${dossierId}",funGenNumberFile);
+			funDossierFile("${dossierId}", funGenNumberFile);
 		});
 
 		$(document).off("click",".dossier-component-profile");
@@ -1095,11 +1097,11 @@
 			var dossierId = "${(dossierId)!}";
 			var dossierTemplateNo = "${(dossier.dossierTemplateNo)!}";
 			var lockState = "${(dossier.lockState)!}";
-			
+
 			var url = "#/"+dossierId+"/files/"+dossierTemplateNo+"/"+partNo;
 
 			var cf = fnConfirm("Thông báo",
-			 "Bạn muốn mở trong tab mới hay cửa sổ mới", 
+			 "Bạn muốn mở trong tab mới hay cửa sổ mới",
 			 "Tab mới", "Cửa sổ mới",
 			function(){
 
@@ -1138,7 +1140,7 @@
 							$.ajax({
 								url : "${api.server}/dossiers/"+dossierId+"/files",
 								dataType : "json",
-								type : "GET",	
+								type : "GET",
 								headers : {"groupId": ${groupId}},
 								success : function(result) {
 									var data = result.data;
@@ -1164,6 +1166,7 @@
 												}, "success");
 											}
 											$("#validPart"+dataPartNo).val("0");
+											
 										}else {
 											if(navigator.onLine){
 												notification.show({
@@ -1171,8 +1174,6 @@
 												}, "error");
 											}
 										}
-
-										
 
 									}
 								},
@@ -1189,7 +1190,7 @@
 							removeDossierFileNotEform(dossierId,fileTemplateNo,dataPartNo);
 						}
 					}
-					
+
 				}
 			}else{
 				alert("Không có kết nối internet, vui lòng kiểm tra kết nối của bạn!");
@@ -1218,7 +1219,7 @@
 						type : "GET",
 						headers : {"groupId": ${groupId}},
 						data : {
-							
+
 						},
 						success : function(result){
 							var arrResult = fnGetPartype2(result.data);
@@ -1250,7 +1251,7 @@
 						},
 						success : function(result){
 							result["data"] = result.hasOwnProperty("data")?result["data"]:[];
-							
+
 							var arrLogsResult = fnGetLogs(result.data);
 							console.log(arrLogsResult);
 							options.success(arrLogsResult);
@@ -1285,12 +1286,12 @@
 					}
 				}
 			}
-			
+
 			return arrResult;
 		}
 
 		var fnGetLogs = function(arrLogs){
-			
+
 			var arrLogsResult = new Array();
 			var count = 0;
 			var result = {};
@@ -1350,7 +1351,7 @@
 			//fnCheckStatusAndHideUpload("${(dossier.dossierStatus)!}",dossierParts);
 
 			//gen number file cho icon thanh phan ho so
-			
+
 			funDossierFile("${dossierId}",funGenNumberFile);
 		}
 	});
@@ -1372,14 +1373,14 @@ var funUploadFile = function(file, partNo , dossierTemplateNo , fileTemplateNo){
 	//data.append('deliverableCode', "");
 
 	$.ajax({
-		type : 'POST', 
-		url  : '${api.server}/dossiers/${dossierId}/files', 
+		type : 'POST',
+		url  : '${api.server}/dossiers/${dossierId}/files',
 		data : data,
 		headers: {"groupId": ${groupId}},
 		processData: false,
 		contentType: false,
 		cache: false,
-		success :  function(result){ 
+		success :  function(result){
 			kendo.ui.progress($("#mainType2"), false);
 
 			funDossierFile("${dossierId}",funGenNumberFile);
@@ -1393,7 +1394,7 @@ var funUploadFile = function(file, partNo , dossierTemplateNo , fileTemplateNo){
 		},
 		error:function(result){
 			kendo.ui.progress($("#mainType2"), false);
-			
+
 			notification.show({
 				message: "Thêm không thành công do số biểu mẫu bị trùng."
 			}, "error");
@@ -1441,7 +1442,7 @@ var fnCheckStatusAndHideUpload = function(dossierStatus, dossierParts){
 				}
 			}
 		}
-		
+
 
 	},function(error){
 
@@ -1465,7 +1466,7 @@ var removeDossierFile = function(dossierId, fileId){
 		},
 		error : function(result) {
 			isSuccess = false;
-		}	
+		}
 	});
 	return isSuccess;
 }
@@ -1503,7 +1504,7 @@ var removeDossierFileNotEform = function(dossierId,fileTemplateNo,partNo){
 		});
 	}
 
-	
+
 }
 
 var funDossierFile = function(dossierId,callBack){
@@ -1519,8 +1520,6 @@ var funDossierFile = function(dossierId,callBack){
 				}else {
 					callBack([]);
 				}
-
-
 			},
 			error : function(result){
 
@@ -1541,6 +1540,7 @@ var funGenNumberFile = function(arrCount){
 		$(this).attr("data-number",found.length);
 		$(this).html('<span class="number-in-circle" >'+found.length+'</span>');
 		if(found.length > 0){
+			$("#validPart"+partNo).val("1");
 			$(".show-dossierpart-new-tab[data-partno="+partNo+"]").attr('hasFile', 'true');
 		}else {
 			$("#validPart"+partNo).val("0");
@@ -1558,12 +1558,12 @@ var getReferentUidFile = function(dossierId,dossierPartNo){
 	var dossierFile;
 	if(dossierId){
 		$.ajax({
-			type : 'GET', 
+			type : 'GET',
 			dataType : "json",
-			url  : '${api.server}/dossiers/${dossierId}/files', 
+			url  : '${api.server}/dossiers/${dossierId}/files',
 			headers: {"groupId": ${groupId}},
 			async : false,
-			success :  function(result){ 
+			success :  function(result){
 				if(result.data){
 					for (var i = 0; i < result.data.length; i++) {
 						if(result.data[i].eForm){
@@ -1612,7 +1612,7 @@ var fnGetFormData = function(dossierId,referentUid){
 var fnSaveForm = function(id, value){
 	var current = $("#btn-save-formalpaca"+id);
 	var referentUid = current.attr("referenceUid");
-	
+
 	if(referentUid){
 		$.ajax({
 			url : "${api.server}/dossiers/${dossierId}/files/"+referentUid+"/formdata",
@@ -1629,7 +1629,7 @@ var fnSaveForm = function(id, value){
 				notification.show({
 					message: "Yêu cầu được thực hiện thành công!"
 				}, "success");
-				
+
 				$("#validPart"+id).val("1");
 				try{
 					for (var i = 0; i < arrIsChangeForm.length; i++) {
@@ -1670,7 +1670,7 @@ $(document).on("click",".saveFormAlpaca",function(event){
 		});
 
 		if(errorMessage === '' && referentUidFile){
-			
+
 			$.ajax({
 				url : "${api.server}/dossiers/${dossierId}/files/"+referentUidFile+"/formdata",
 				dataType : "json",
@@ -1686,7 +1686,7 @@ $(document).on("click",".saveFormAlpaca",function(event){
 					notification.show({
 						message: "Yêu cầu được thực hiện thành công!"
 					}, "success");
-					
+
 					$("#validPart"+id).val("1");
 
 					try{
@@ -1707,7 +1707,7 @@ $(document).on("click",".saveFormAlpaca",function(event){
 				}
 			});
 
-		}else {
+		} else {
 			notification.show({
 				message: "Vui lòng kiểm tra lại các thông tin bắt buộc trước khi ghi lại!"
 			}, "error");
@@ -1718,7 +1718,7 @@ $(document).on("click",".saveFormAlpaca",function(event){
 
 $("#btn-sendReissue-dossier").click(function(){
 	var cf = fnConfirm("Thông báo",
-		"Bạn có muốn gửi yêu cầu cấp lại?", 
+		"Bạn có muốn gửi yêu cầu cấp lại?",
 		"OK", "Thoát",
 		function(){
 
@@ -1729,7 +1729,7 @@ $("#btn-sendReissue-dossier").click(function(){
 		});
 
 	cf.open();
-	
+
 });
 
 
@@ -1788,7 +1788,7 @@ var fnSubmitting2 = function(dossierId){
 			}, "success");
 			$("#btn-sendadd-dossier-header,#btn-sendadd-dossier-footer").hide();
 			try {
-				manageDossier.navigate("/"+statusRouteTem.status); 
+				manageDossier.navigate("/"+statusRouteTem.status);
 				$('html,body').scrollTop(0);
 			}catch(e){
 
@@ -1803,7 +1803,7 @@ var fnSubmitting2 = function(dossierId){
 		}
 	});
 
-	
+
 }
 
 
@@ -1840,7 +1840,7 @@ var fnCorrecting = function(dossierId){
 			$("#btn-sendReissue-dossier-footer").hide();
 
 			try {
-				manageDossier.navigate("/"+statusRouteTem.status); 
+				manageDossier.navigate("/"+statusRouteTem.status);
 				$('html,body').scrollTop(0);
 			}catch(e){
 
@@ -1860,7 +1860,7 @@ var fnCorrecting = function(dossierId){
 
 $("#btn-cancelling-header").click(function(){
 	var cf = fnConfirm("Thông báo",
-		"Bạn có muốn gửi yêu cầu hủy?", 
+		"Bạn có muốn gửi yêu cầu hủy?",
 		"OK", "Thoát",
 		function(){
 
@@ -1876,7 +1876,7 @@ $("#btn-cancelling-header").click(function(){
 
 $("#btn-rescancelling-dossier").click(function(){
 	var cf = fnConfirm("Thông báo",
-		"Bạn có muốn gửi yêu cầu hủy?", 
+		"Bạn có muốn gửi yêu cầu hủy?",
 		"OK", "Thoát",
 		function(){
 
@@ -1887,7 +1887,7 @@ $("#btn-rescancelling-dossier").click(function(){
 		});
 
 	cf.open();
-	
+
 });
 
 var fnCancelling = function(dossierId){
@@ -1925,10 +1925,10 @@ var fnCancelling = function(dossierId){
 				$("#btn-rescancelling-dossier,#btn-cancelling-header").hide();
 
 				try{
-					manageDossier.navigate("/"+statusRouteTem.status); 
+					manageDossier.navigate("/"+statusRouteTem.status);
 					$('html,body').scrollTop(0);
 				}catch(e){
-					
+
 				}
 			},
 			error : function(result){
@@ -1983,9 +1983,9 @@ $("#btn-sendadd-dossier-header,#btn-sendadd-dossier-footer").click(function(){
 
 		return false;
 	}
-	
+
 	var cf = fnConfirm("Thông báo",
-		"Bạn có muốn gửi yêu cầu bổ sung?", 
+		"Bạn có muốn gửi yêu cầu bổ sung?",
 		"OK", "Thoát",
 		function(){
 
@@ -2001,7 +2001,7 @@ $("#btn-sendadd-dossier-header,#btn-sendadd-dossier-footer").click(function(){
 $("#btn-sendReissue-dossier-header,#btn-sendReissue-dossier-footer").click(function(){
 
 	var cf = fnConfirm("Thông báo",
-		"Bạn có muốn gửi yêu cầu cấp lại?", 
+		"Bạn có muốn gửi yêu cầu cấp lại?",
 		"OK", "Thoát",
 		function(){
 
@@ -2012,12 +2012,12 @@ $("#btn-sendReissue-dossier-header,#btn-sendReissue-dossier-footer").click(funct
 		});
 
 	cf.open();
-	
+
 });
 
 $("#btn-submit-dossier,#btn-submit-dossier-header").click(function(){
 
-	
+
 	/*if($("textarea#applicantNote").val() === ""){
 		var cf = showAlert("Thông báo","Bạn phải nhập thông báo gửi bổ sung!","Thoát");
 		cf.open();
@@ -2035,7 +2035,7 @@ $("#btn-submit-dossier,#btn-submit-dossier-header").click(function(){
 	}
 
 	var cf = fnConfirm("Thông báo",
-		"Bạn có muốn nộp hồ sơ?", 
+		"Bạn có muốn nộp hồ sơ?",
 		"OK", "Thoát",
 		function(){
 
@@ -2104,7 +2104,7 @@ $("#btn-submit-dossier,#btn-submit-dossier-header").click(function(){
 								try {
 
 									firstLoadDataSource = true;
-									manageDossier.navigate("/"+statusRouteTem.status); 
+									manageDossier.navigate("/"+statusRouteTem.status);
 									$('html,body').scrollTop(0);
 								}catch(e){
 
@@ -2134,7 +2134,7 @@ $("#btn-submit-dossier,#btn-submit-dossier-header").click(function(){
 		});
 
 	cf.open();
-	
+
 });
 
 var fnBack = function(){
@@ -2219,7 +2219,7 @@ window.onhashchange = function(event) {
 
 		}
 	}
-	
+
 }
 
 $("#dossier-payment-online").click(function(){
@@ -2237,14 +2237,14 @@ $("#dossier-payment-online").click(function(){
 					window.location.href = result.keypayUrl;
 				},
 				error :  function(result){
-					
+
 				}
 
 			});
 		}
 	});
 
-	
+
 $("#dossier-payment-confirm").click(function(){
 	var referenceUid = $(this).attr("data-pk");
 	if(referenceUid){
@@ -2289,7 +2289,7 @@ $("#filePayment").change(function(event){
 		}else {
 			$("#fileNamePayment").html("");
 		}
-		
+
 	}catch(e){
 		$("#fileNamePayment").html("");
 	}
@@ -2326,11 +2326,11 @@ function fileAttachmentUrl ( options) {
   var xhttp = new XMLHttpRequest();
   var a,filename;
   var data = {};
-  
+
   xhttp.onreadystatechange = function() {
-  	
+
   	if (xhttp.readyState === 4 && xhttp.status === 200) {
-  		
+
       // check for a filename
       var disposition = xhttp.getResponseHeader('Content-Disposition');
       if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -2338,25 +2338,25 @@ function fileAttachmentUrl ( options) {
       	var matches = filenameRegex.exec(disposition);
       	if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
       }
-      
+
       // Trick for making downloadable link
       a = document.createElement('a');
       a.href = window.URL.createObjectURL(xhttp.response);
 
       var url = window.URL.createObjectURL(xhttp.response);
-      
+
       //callback success
       options.success({url : url, status : xhttp.status});
   } else if (xhttp.readyState === 4 && xhttp.status !== 200) {
   	options.error(xhttp.status);
   }
-  
+
 };
 
   // Post data to URL which handles post request
   xhttp.open(options.method, options.url);
   xhttp.setRequestHeader("Content-Type", "application/json");
-  
+
   // others data header
   if (options.hasOwnProperty("headers")){
   	Object.keys( options.headers ).map(function(objectKey, index) {
@@ -2371,15 +2371,15 @@ function fileAttachmentUrl ( options) {
   } else {
   	xhttp.responseType = 'blob';
   }
-  
+
   // Data to post
   if (options.hasOwnProperty("data")){
   	data = options.data;
   }
-  
+
   // excecute request
   xhttp.send(data);
-  
+
 };
 
 function openFileNewtab(url){

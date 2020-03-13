@@ -158,11 +158,4 @@ public class BackendKysoApiRestApplication extends Application {
 		}
 	}
 
-	@GET
-	@Produces("text/plain")
-	public String working() {
-		return "It works!";
-	}
-
-
 }

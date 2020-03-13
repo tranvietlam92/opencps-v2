@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.opencps.dossiermgt.model.DossierRequestUD;
+import org.opencps.dossiermgt.service.DossierRequestUDLocalServiceUtil;
 import org.opencps.dossiermgt.service.base.DossierRequestUDLocalServiceBaseImpl;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -109,6 +110,17 @@ public class DossierRequestUDLocalServiceImpl
 		
 		return dossierRequest;
 		
+	}
+	
+	public DossierRequestUD getByDossierAndType(long dossierId, String type) {
+		
+		List<DossierRequestUD> dossierRequestUDs = dossierRequestUDPersistence.findByD_RT(dossierId, type);
+		
+		if (dossierRequestUDs.size() != 0) {
+			return dossierRequestUDs.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 	public List<DossierRequestUD> getDossierRequest(long dossierId, int isNew) throws PortalException, SystemException {

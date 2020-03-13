@@ -138,6 +138,11 @@ public class SyncQueueProcessScheduler extends BaseSchedulerEntryMessageListener
 			serviceContext.setSignedIn(true);
 
 			for (SyncQueue pqueue : lstSyncs) {
+				
+				_log.info("::::::XXX:::" + pqueue.getSyncQueueId());
+				
+				
+				
 				if (DictCollectionTemp.class.getName().equals(pqueue.getClassName())) {
 					boolean isFound = false;
 					JSONObject jsonObject = JSONFactoryUtil.createJSONObject(pqueue.getJsonObject());
@@ -413,6 +418,8 @@ public class SyncQueueProcessScheduler extends BaseSchedulerEntryMessageListener
 						params.put(PushDictGroupTerm.GROUP_NAME, groupName);
 						params.put(PushDictGroupTerm.GROUP_NAME_EN, groupNameEN);
 						params.put(PushDictGroupTerm.GROUP_DESCRIPTION, groupDescription);
+						
+						_log.info("SYN_ADD_METHOD:::: SyncServerTerm.METHOD_CREATE)");
 
 						if (!lstExcludes.contains(collectionCode)) {
 							JSONObject resDictGroup = rest.callPostAPI(
@@ -452,6 +459,9 @@ public class SyncQueueProcessScheduler extends BaseSchedulerEntryMessageListener
 							_syncQueueLocalService.deleteSyncQueue(pqueue.getSyncQueueId());
 						}
 					} else if (pqueue.getMethod().equals(SyncServerTerm.METHOD_UPDATE)) {
+						
+						_log.info("SYN_ADD_METHOD:::: SyncServerTerm.METHOD_UPDATE)");
+
 						putDictGroupRestUrl.setLength(0);
 						putDictGroupRestUrl.append(dictCollectionEndPoint);
 						putDictGroupRestUrl.append("/" + collectionCode);
@@ -501,6 +511,9 @@ public class SyncQueueProcessScheduler extends BaseSchedulerEntryMessageListener
 							_syncQueueLocalService.deleteSyncQueue(pqueue.getSyncQueueId());
 						}
 					} else if (pqueue.getMethod().equals(SyncServerTerm.METHOD_DELETE)) {
+						
+						_log.info("SYN_ADD_METHOD:::: SyncServerTerm.METHOD_DELETE)");
+
 						putDictGroupRestUrl.setLength(0);
 						putDictGroupRestUrl.append(dictCollectionEndPoint);
 						putDictGroupRestUrl.append("/" + collectionCode);

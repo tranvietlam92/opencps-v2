@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.opencps.dossiermgt.action.FileUploadUtils;
 import org.opencps.dossiermgt.action.util.AutoFillFormData;
+import org.opencps.dossiermgt.action.util.DossierFileUtils;
 import org.opencps.dossiermgt.constants.DossierFileTerm;
 import org.opencps.dossiermgt.exception.DuplicateDossierFileException;
 import org.opencps.dossiermgt.exception.InvalidDossierStatusException;
@@ -608,8 +609,33 @@ public class DossierFileLocalServiceImpl extends DossierFileLocalServiceBaseImpl
 
 			dossierFile.setFormReport(jrxmlTemplate);
 		}
-
+		// NEW_DOSSIER
 		dossierFile.setFormData(formData);
+		try {
+			
+			ServiceContext serviceContextFile = new ServiceContext();
+			long userId = 20164;
+			long companyId = 20116;
+			
+			serviceContextFile.setUserId(userId);
+			serviceContextFile.setCompanyId(companyId);
+			serviceContextFile.setScopeGroupId(groupId);
+			
+			_log.info("NEW CODE FILES_FROM_FORM_UPDATEDDDDD");
+			DossierFileUtils fileUtils = new DossierFileUtils();
+			
+			FileEntry fileEntry = fileUtils.uploadFileEntry(userId, groupId, formData, "FORM_FILE_DATA_STORE",
+					serviceContextFile);
+			
+			String urlFile = fileUtils.getFileContent(fileEntry.getFileEntryId());
+			
+			_log.info(urlFile);
+
+			
+		} catch (Exception e) {
+			_log.error(e);
+		}
+		
 		dossierFile.setIsNew(true);
 
 		// Binhth add message bus to processing jasper file

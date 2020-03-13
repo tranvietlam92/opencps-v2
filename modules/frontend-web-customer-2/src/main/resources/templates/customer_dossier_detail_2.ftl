@@ -54,7 +54,7 @@
 			</div>
 		</div>
 
-		<div class="guide-section PB0">
+		<div class="guide-section PB0" style="clear: both;">
 			<div class="head-part slide-toggle">
 				<div class="background-triangle-small">
 					<i class="fa fa-star"></i>
@@ -370,7 +370,7 @@
 	<button class="btn btn-active" id="btn-back-dossier" type="button"><i class="fa fa-reply" aria-hidden="true"></i> Quay lại</button>
 	
 	<#if dossier.submitting?has_content &&  dossier.submitting != true && dossier.dossierStatus?has_content && dossier.dossierStatus == "new">
-		<button class="btn btn-active" id="btn-submit-dossier" data-bind="value : referenceUid" data-bind="value : lockState"><i class="fa fa-paper-plane"></i> Nộp hồ sơ</button>
+		<button class="btn btn-active" id="btn-submit-dossier" data-bind="value : lockState"><i class="fa fa-paper-plane"></i> Nộp hồ sơ</button>
 
 		<button class="btn btn-active" id="btn-delete-dossier" data-bind="attr : {data-pk : dossierId}" data-bind="value : lockState"><i class="fa fa-trash"></i> Xóa</button>
 	</#if>
@@ -392,7 +392,7 @@
 
 
 <script type="text/javascript">
-
+	console.log("VLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL2222222222222222222");
 	$("#step2").addClass("done");
 	$("#step3").addClass("done");
 	var arrIsChangeForm = [];

@@ -45,6 +45,114 @@ public class DossierActionUserImpl implements DossierActionUser {
 			DossierActionUserPK dossierActionUserPK) throws PortalException {
 		return DossierActionUserLocalServiceUtil.deleteDossierActionUser(dossierActionUserPK);
 	}
+	
+	@Override
+	public void initDossierActionUsers(long dossierActionId, long userId, long groupId, long assignUserId, String stepCode)
+			throws PortalException {
+		// Delete record in dossierActionUser
+		List<org.opencps.dossiermgt.model.DossierActionUser> dossierActionUser = DossierActionUserLocalServiceUtil
+				.getListUser(dossierActionId);
+		
+		if (dossierActionUser != null && dossierActionUser.size() > 0) {
+			for (org.opencps.dossiermgt.model.DossierActionUser dau : dossierActionUser) {
+				DossierActionUserLocalServiceUtil.deleteDossierActionUser(dau);
+			}
+		}
+		
+		// Get DossierAction
+		DossierAction dossierAction = DossierActionLocalServiceUtil.getDossierAction(dossierActionId);
+
+		
+		//String actionCode = dossierAction.getActionCode();
+		long serviceProcessId = dossierAction.getServiceProcessId();
+
+		// Get ProcessAction
+		
+		//ProcessAction processAction = ProcessActionLocalServiceUtil.getByS_A_PS(serviceProcessId, actionCode, stepCode);
+		//String stepCode = processAction.getPostStepCode();
+
+//		_log.info("1");
+		// Get ProcessStep
+		ProcessStep processStep = ProcessStepLocalServiceUtil.fetchBySC_GID(stepCode, groupId, serviceProcessId);
+		long processStepId = processStep.getProcessStepId();
+
+//		_log.info("2");
+		// Get List ProcessStepRole
+		List<ProcessStepRole> listProcessStepRole = ProcessStepRoleLocalServiceUtil.findByP_S_ID(processStepId);
+		ProcessStepRole processStepRole = null;
+		for (int i = 0; i < listProcessStepRole.size(); i++) {
+			processStepRole = listProcessStepRole.get(i);
+			long roleId = processStepRole.getRoleId();
+			boolean moderator = processStepRole.getModerator();
+			int mod = 0;
+			if (moderator) {
+				mod = 1;
+			}
+//			_log.info("3");
+//			_log.info("roleId: "+roleId);
+			// Get list user
+			List<User> users = UserLocalServiceUtil.getRoleUsers(roleId);
+			
+		
+			
+			if (assignUserId > 0) {
+				for (User user : users) {
+					_log.info("user: "+user.getUserId());
+					boolean assigned = user.getUserId() == assignUserId ? true : false;
+					if (assigned) {
+						org.opencps.dossiermgt.model.DossierActionUser model = new org.opencps.dossiermgt.model.impl.DossierActionUserImpl();
+						model.setUserId(user.getUserId());
+						model.setDossierActionId(dossierActionId);
+						model.setModerator(mod);
+						model.setAssigned(assigned);
+						model.setVisited(false);
+						// Add User
+						DossierActionUserLocalServiceUtil.addDossierActionUser(model);
+						break;
+					}
+				}
+			} else {
+				if (i == 0) {
+					for (User user : users) {
+						boolean assigned = true;
+						org.opencps.dossiermgt.model.DossierActionUser model = new org.opencps.dossiermgt.model.impl.DossierActionUserImpl();
+						model.setUserId(user.getUserId());
+						model.setDossierActionId(dossierActionId);
+						model.setModerator(mod);
+						model.setAssigned(assigned);
+						model.setVisited(false);
+						// Add User
+						DossierActionUserLocalServiceUtil.addDossierActionUser(model);
+					}
+				} else {
+					for (User user : users) {
+						boolean assigned = true;
+						org.opencps.dossiermgt.model.DossierActionUser dau = DossierActionUserLocalServiceUtil.getByDossierAndUser(dossierActionId, user.getUserId());
+						if (dau != null) {
+							dau.setModerator(mod);
+							if (assigned) {
+								dau.setAssigned(assigned);
+								
+							}
+							DossierActionUserLocalServiceUtil.updateDossierActionUser(dau);
+						} else {
+							
+							org.opencps.dossiermgt.model.DossierActionUser model = new org.opencps.dossiermgt.model.impl.DossierActionUserImpl();
+							model.setUserId(user.getUserId());
+							model.setDossierActionId(dossierActionId);
+							model.setModerator(mod);
+							model.setAssigned(assigned);
+							model.setVisited(false);
+							// Add User
+							DossierActionUserLocalServiceUtil.addDossierActionUser(model);
+						}
+					}
+				}
+			}
+		}
+//		_log.info("END ROLES");
+	}
+
 
 	@Override
 	public void initDossierActionUser(long dossierActionId, long userId, long groupId, long assignUserId)
@@ -94,9 +202,10 @@ public class DossierActionUserImpl implements DossierActionUser {
 //			_log.info("roleId: "+roleId);
 			// Get list user
 			List<User> users = UserLocalServiceUtil.getRoleUsers(roleId);
-//			for (int j = 0; j < users.size(); j++) {
-//				_log.info("UserID: "+i+ users.get(i).getUserId());
-//			}
+			for (int j = 0; j < users.size(); j++) {
+				_log.info("**** UserID: "+i +"." + j + ". "+ users.get(i).getUserId() + " " + users.get(i).getFullName());
+			}
+			
 			if (assignUserId > 0) {
 				for (User user : users) {
 					_log.info("user: "+user.getUserId());

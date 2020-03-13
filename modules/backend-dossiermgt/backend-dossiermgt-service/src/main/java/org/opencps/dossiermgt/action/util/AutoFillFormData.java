@@ -144,13 +144,13 @@ public class AutoFillFormData {
 			try {
 				Employee employee = EmployeeLocalServiceUtil.fetchByF_mappingUserId(dossier.getGroupId(), serviceContext.getUserId());
 				
-				_log.info("GET EMPLOYEE ID ____" + serviceContext.getUserId());
+				//_log.info("GET EMPLOYEE ID ____" + serviceContext.getUserId());
 				
 				JSONObject employeeJSON = JSONFactoryUtil.createJSONObject(JSONFactoryUtil.looseSerialize(employee));
 				
-				_log.info("GET EMPLOYEE ____");
+				//_log.info("GET EMPLOYEE ____");
 
-				_log.info(employeeJSON);
+//				_log.info(employeeJSON);
 				
 				_employee_employeeNo = employeeJSON.getString("employeeNo");
 				_employee_fullName = employeeJSON.getString("fullName");
@@ -282,6 +282,7 @@ public class AutoFillFormData {
 					String[] stringSplit = newString.split("@");
 					String variable = stringSplit[0];
 					String paper = stringSplit[1];
+		
 					try {
 						DossierFile dossierFile = DossierFileLocalServiceUtil.getDossierFileByDID_FTNO_First(dossierId,
 								paper, false, new DossierFileComparator(false, "createDate", Date.class));
@@ -319,18 +320,29 @@ public class AutoFillFormData {
 			}
 
 			for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
-				if (entry.getValue().getClass().getName().contains("JSONArray")) {
-					result.put(entry.getKey(), (JSONArray) entry.getValue());
-				} else if (entry.getValue().getClass().getName().contains("JSONObject")) {
-					result.put(entry.getKey(), (JSONObject) entry.getValue());
+				
+//				_log.info(StringUtil.shorten(entry.getValue().toString(), 2500));
+
+				if (entry.getValue().toString().trim().startsWith("[")) {
+					JSONArray jsonArray = JSONFactoryUtil.createJSONArray(entry.getValue().toString());
+					result.put(entry.getKey(), jsonArray);
+					//_log.info("FFFFFFFF********" + entry.getValue().toString());
+					//result.put(entry.getKey(), (JSONArray) entry.getValue());
+				} else if (entry.getValue().toString().trim().startsWith("{")) {
+					//_log.info("FFFFFFFF********OBJECT");
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject(entry.getValue().toString());
+					
+					result.put(entry.getKey(), jsonObject);
 				} else {
-					result.put(entry.getKey(), entry.getValue() + "");
+					
+					result.put(entry.getKey(),entry.getValue() + "");
 				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
+//		_log.info(StringUtil.shorten(result.toJSONString(), 2500));
 		return result.toJSONString();
 	}
 

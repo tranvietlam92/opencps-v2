@@ -664,17 +664,21 @@ public class PaymentFileManagementImpl implements PaymentFileManagement {
 				sorts = new Sort[] { SortFactoryUtil.create(search.getSort() + "_sortable", Sort.STRING_TYPE,
 						GetterUtil.getBoolean(search.getOrder())) };
 			}
+			
+			//_log.info("go****");
 
 			JSONObject paymentFileJsonObject = action.getPaymentFiles(serviceContext.getUserId(),
 					serviceContext.getCompanyId(), groupId, params, sorts, search.getStart(), search.getEnd(),
 					serviceContext);
+			//_log.info("go****2");
 
 			List<Document> documents = (List<Document>) paymentFileJsonObject.get("data");
 
 			results.setTotal(paymentFileJsonObject.getInt("total"));
 
 			results.getData().addAll(PaymentFileUtils.mappingToPaymentFileSearchResultModel(documents));
-
+			//_log.info("go****3");
+			
 			return Response.status(200).entity(results).build();
 
 		} catch (Exception e) {
@@ -700,10 +704,12 @@ public class PaymentFileManagementImpl implements PaymentFileManagement {
 				return Response.status(HttpURLConnection.HTTP_UNAUTHORIZED).entity(error).build();
 
 			} else {
-
+				
 				error.setMessage("No Content.");
 				error.setCode(HttpURLConnection.HTTP_FORBIDDEN);
-				error.setDescription("No Content.");
+				error.setDescription(e.getMessage());
+				
+				//_log.error(e);
 
 				return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(error).build();
 

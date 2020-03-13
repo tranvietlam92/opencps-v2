@@ -250,7 +250,7 @@ public class SignatureManagementImpl implements SignatureManagement{
 						}
 						
 						results = JSONFactoryUtil.createJSONObject(hashComputed.getString(RESTFulConfiguration.MESSAGE));
-//						_log.info("results: "+results);
+						_log.info("XXXXXXXXXresults: "+results);
 					} else {
 						results = JSONFactoryUtil.createJSONObject();
 						results.put("msg", "fileEntryId");
@@ -261,6 +261,9 @@ public class SignatureManagementImpl implements SignatureManagement{
 
 //			results = JSONFactoryUtil.createJSONObject(hashComputed.getString(RESTFulConfiguration.MESSAGE));
 //			_log.info("results: "+results);
+			
+			
+			_log.info("*******results: "+results.toJSONString());
 
 			return Response.status(200).entity(JSONFactoryUtil.looseSerialize(results)).build();
 

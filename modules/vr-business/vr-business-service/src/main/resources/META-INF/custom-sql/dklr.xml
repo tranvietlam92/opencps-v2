@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custom-sql>
+
+<!-- 	<sql id="com.fds.vr.business.service.persistence.ILCertificateFinder.searchLienVan"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				il_certificate.* -->
+<!-- 			FROM  -->
+<!-- 				il_certificate -->
+<!-- 			WHERE  -->
+<!-- 				(licenceNo = ? OR registrationNumber = ?) AND  -->
+<!-- 				serviceCode IN ('BGTVT0600005','BGTVT0600006','BGTVT0600007','BGTVT0600008','BGTVT0600009','BGTVT0600010','BGTVT0600011','BGTVT0600012','BGTVT0600023','BGTVT0600024','BGTVT0600025','BGTVT0600026','BGTVT0600027','BGTVT0600028','BGTVT0600029','BGTVT0600036','BGTVT0600037','BGTVT0600038','BGTVT0600039','BGTVT0600040','BGTVT0600041','BGTVT0600042','BGTVT0600043','BGTVT0600048','BGTVT0600049','BGTVT0600050','BGTVT0600051','BGTVT0600052','BGTVT0600053','BGTVT0600054','BGTVT0600055','BGTVT0600058','BGTVT0600059','BGTVT0600060' ) -->
+<!-- 		]]> -->
+<!-- 	</sql> -->
+	
+<!-- 	<sql id="com.fds.vr.business.service.persistence.ILCertificateFinder.searhGiayPhep"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				il_certificate.* -->
+<!-- 			FROM  -->
+<!-- 				il_certificate -->
+<!-- 			WHERE  -->
+<!-- 				(licenceNo LIKE ? OR applicantName LIKE ?) AND -->
+<!-- 				serviceCode NOT IN ('BGTVT0600005','BGTVT0600006','BGTVT0600007','BGTVT0600008','BGTVT0600009','BGTVT0600010','BGTVT0600011','BGTVT0600012','BGTVT0600023','BGTVT0600024','BGTVT0600025','BGTVT0600026','BGTVT0600027','BGTVT0600028','BGTVT0600029','BGTVT0600036','BGTVT0600037','BGTVT0600038','BGTVT0600039','BGTVT0600040','BGTVT0600041','BGTVT0600042','BGTVT0600043','BGTVT0600048','BGTVT0600049','BGTVT0600050','BGTVT0600051','BGTVT0600052','BGTVT0600053','BGTVT0600054','BGTVT0600055','BGTVT0600058','BGTVT0600059','BGTVT0600060' ) -->
+<!-- 		]]> -->
+<!-- 	</sql> -->
+	
+<!-- 	<sql id="com.fds.vr.business.service.persistence.ILCertificateFinder.searchCertificateByRegNumber"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				il_certificate.* -->
+<!-- 			FROM  -->
+<!-- 				il_certificate -->
+<!-- 			WHERE  -->
+<!-- 				(registrationNumber = ?) AND  -->
+<!-- 				dossierTemplateNo IN ('BGTVT0600039','BGTVT0600040') -->
+<!-- 		]]> -->
+<!-- 	</sql> -->
+</custom-sql>

@@ -31,7 +31,10 @@
 				})
 			} else {
 				$("#mainType2").load("${ajax.customer_dossier_detail_4}&${portletNamespace}dossierId="+id+"",function(result){
-				})
+					if (dossierItemStatus === 'waiting_3') {
+						$("#btn-submit-dossier").html('<i class="fa fa-paper-plane" ></i> Xác nhận kế hoạch')
+					}
+				});
 			};
 			getTotal();
 

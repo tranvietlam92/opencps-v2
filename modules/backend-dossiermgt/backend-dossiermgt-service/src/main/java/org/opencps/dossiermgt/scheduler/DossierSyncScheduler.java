@@ -57,7 +57,7 @@ public class DossierSyncScheduler extends BaseSchedulerEntryMessageListener {
 		HashMap<String, String> properties = new HashMap<String, String>();
 
 		String serverConfigEndpoint = "serverconfigs";
-
+		
 		JSONObject resServerConfig = rest.callAPI(0l, HttpMethods.GET, "application/json",
 				RESTFulConfiguration.SERVER_PATH_BASE, serverConfigEndpoint, RESTFulConfiguration.SERVER_USER,
 				RESTFulConfiguration.SERVER_PASS, properties, serviceContext);

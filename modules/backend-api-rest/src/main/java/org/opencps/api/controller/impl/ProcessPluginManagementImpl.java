@@ -22,10 +22,12 @@ import org.opencps.dossiermgt.action.impl.DossierFileActionsImpl;
 import org.opencps.dossiermgt.action.util.AutoFillFormData;
 import org.opencps.dossiermgt.model.Dossier;
 import org.opencps.dossiermgt.model.DossierAction;
+import org.opencps.dossiermgt.model.DossierActionUser;
 import org.opencps.dossiermgt.model.DossierFile;
 import org.opencps.dossiermgt.model.DossierPart;
 import org.opencps.dossiermgt.model.ProcessPlugin;
 import org.opencps.dossiermgt.service.DossierActionLocalServiceUtil;
+import org.opencps.dossiermgt.service.DossierActionUserLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierFileLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierLocalServiceUtil;
 import org.opencps.dossiermgt.service.DossierPartLocalServiceUtil;
@@ -64,13 +66,34 @@ public class ProcessPluginManagementImpl implements ProcessPluginManagement {
 			if (!auth.isAuth(serviceContext)) {
 				throw new UnauthenticationException();
 			}
-
+			
 			Dossier dossier = getDossier(id, groupId);
-
+			
 			if (Validator.isNotNull(dossier)) {
 
 				long dossierActionId = dossier.getDossierActionId();
+				
+				long userId = user.getUserId();
+				
+				List<DossierActionUser> dossierActionUsers = DossierActionUserLocalServiceUtil.getListUser(dossierActionId);
+				
+				boolean hasPermission = false;
+				
+				for (DossierActionUser actionUser : dossierActionUsers) {
+					if (actionUser.getUserId() == userId && actionUser.getModerator() == 1) {
+						hasPermission = true;
+					}
+				}
+				
+				if (!hasPermission) {
+					
+					JSONObject resultsNull = JSONFactoryUtil.createJSONObject();
 
+					resultsNull.put("total", 0);
+					
+					return Response.status(200).entity(JSONFactoryUtil.looseSerialize(resultsNull)).build();
+				}
+				
 				if (dossierActionId != 0) {
 
 					DossierAction dossierAction = DossierActionLocalServiceUtil.getDossierAction(dossierActionId);
@@ -357,9 +380,12 @@ public class ProcessPluginManagementImpl implements ProcessPluginManagement {
 					String formReport = StringPool.BLANK;
 
 					if (formCode.startsWith("#")) {
+						
 						formData = _getFormData(groupId, formCode, dossier.getDossierId(), autoRun,
 								dossier.getDossierTemplateNo(), original, serviceContext);
-
+						
+						_log.info("formData"+ formData);
+						
 						formReport = _getFormScript(formCode, dossier.getDossierId());
 					}
 
@@ -459,7 +485,7 @@ public class ProcessPluginManagementImpl implements ProcessPluginManagement {
 			DossierPart dossierPart = DossierPartLocalServiceUtil.getByFileTemplateNo(groupId, fileTemplateNo);
 
 			formData = AutoFillFormData.sampleDataBinding(dossierPart.getSampleData(), dossierId, context);
-
+			
 			_log.info(formData);
 
 			if (original) {
@@ -500,6 +526,7 @@ public class ProcessPluginManagementImpl implements ProcessPluginManagement {
 			}
 
 		} catch (Exception e) {
+			_log.error(e);
 			_log.info("Cant get formdata with fileTemplateNo_" + fileTemplateNo);
 		}
 

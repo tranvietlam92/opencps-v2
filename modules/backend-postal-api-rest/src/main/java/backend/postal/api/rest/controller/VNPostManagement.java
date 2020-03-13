@@ -1,4 +1,4 @@
-package backend.postal.api.rest.controller;
+ package backend.postal.api.rest.controller;
 
 import java.net.HttpURLConnection;
 import java.util.Locale;

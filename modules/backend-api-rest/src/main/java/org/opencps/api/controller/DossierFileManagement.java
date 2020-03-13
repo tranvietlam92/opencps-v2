@@ -43,6 +43,8 @@ import io.swagger.annotations.ApiResponses;
 @Path("/dossiers")
 @Api(value = "", tags = "dossiers")
 public interface DossierFileManagement {
+	
+
 	@GET
 	@Path("/{id}/files")
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -58,6 +60,21 @@ public interface DossierFileManagement {
 			@ApiParam(value = "id of dossier", required = true) @PathParam("id") long id,
 			@ApiParam(value = "password for access dossier file", required = false) @PathParam("password") String password);
 
+	
+	@POST
+	@Path("/formfiles")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response uploadFile(@Context HttpServletRequest request, @Context HttpHeaders header,
+			@Context Company company, @Context Locale locale, @Context User user,
+			@Context ServiceContext serviceContext, @Multipart("file") Attachment file);
+	
+	@DELETE
+	@Path("/formfiles/{fileid}")
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response deleteFile(@Context HttpServletRequest request, @Context HttpHeaders header,
+			@Context Company company, @Context Locale locale, @Context User user, @PathParam("fileid") long fileid);
+	
 	/*
 	 * @GET
 	 * 

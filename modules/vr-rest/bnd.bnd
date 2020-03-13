@@ -1,0 +1,5 @@
+Bundle-Name: vr-rest
+Bundle-SymbolicName: com.fds.vr
+Bundle-Version: 1.0.0
+Liferay-Configuration-Path: /configuration
+Export-Package: com.fds.vr.business.action.util

@@ -130,7 +130,8 @@ public class FrontendWebCustomerPortlet extends FreeMarkerPortlet {
 		JSONObject userInfo = generalUserInfo(themeDisplay.getUserId());
 
 		JSONObject paymentObject = generatePaymentObject(dossierUUid, paymentFileUUid, trans_id, good_code);
-
+		
+		
 		// set varible
 		renderRequest.setAttribute("ajax", generateURLJsonObject(renderResponse));
 		renderRequest.setAttribute("api", generateApiJsonObject(themeDisplay));

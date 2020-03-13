@@ -206,6 +206,7 @@ public class ApplicantLocalServiceImpl extends ApplicantLocalServiceBaseImpl {
 					LocaleUtil.getDefault(), spn.getFirstName(), spn.getMidName(), spn.getLastName(), 0, 0, true, month,
 					dayOfMonth, year, ServiceProps.APPLICANT_JOB_TITLE, groupIds, organizationIds, roleIds,
 					userGroupIds, sendEmail, context);
+			
 
 			mappingUser.setStatus(WorkflowConstants.STATUS_PENDING);
 

@@ -76,9 +76,7 @@ gradle-local.properties
 
 **/**/ServiceProps.java
 
-**/vr-business/**
-**/vr-rest/**
 mt-dklr/**
 theme_nz/*
-modules/vr-business
+
 gradle.properties

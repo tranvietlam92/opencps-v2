@@ -144,6 +144,8 @@ public class DataManagementUtils {
 				ett.setModifiedDate(
 						Validator.isNotNull(document.get("modified")) ? APIDateTimeUtils.convertDateToString(
 								document.getDate("modified"), APIDateTimeUtils._TIMESTAMP) : StringPool.BLANK);
+				
+				
 
 				DictItem parentItem = DictItemLocalServiceUtil
 						.fetchDictItem(Long.valueOf(document.get(DictItemTerm.PARENT_ITEM_ID)));

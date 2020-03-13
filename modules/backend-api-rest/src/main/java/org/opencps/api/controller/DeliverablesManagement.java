@@ -197,6 +197,18 @@ public interface DeliverablesManagement {
 			@FormParam("keyword") String keyword, @FormParam("start") String start, @FormParam("end") String end,
 			@FormParam("applicantIdNo") String applicantIdNo, @FormParam("deliverableState") String deliverableState);
 	
+	
+	@POST
+	@Path("/deliverables/agency/{agencyNo}/type/{typeCode}/file")
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+	public Response getFileByTypeCode(@Context HttpServletRequest request, @Context HttpHeaders header, @Context Company company,
+			@Context Locale locale, @Context User user, @Context ServiceContext serviceContext,
+			@ApiParam(value = "id for agency", required = true) @PathParam("agencyNo") String agencyNo,
+			@ApiParam(value = "id for type", required = true) @PathParam("typeCode") String typeCode,
+			@FormParam("keyword") String keyword, @FormParam("start") String start, @FormParam("end") String end,
+			@FormParam("applicantIdNo") String applicantIdNo, @FormParam("deliverableState") String deliverableState);
+	
 	/* Get list dataform by agencyNo and typeCode - END */
 
 	/* Get list dataform by agencyNo and deliverableType - START */
